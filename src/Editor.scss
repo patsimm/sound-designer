@@ -1,0 +1,29 @@
+.editor {
+  --hover-stroke-width: 3px;
+  --hover-stroke-color: #f141ff;
+
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+
+  &__content {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background: dimgray;
+  }
+
+  &__node {
+    transform-box: fill-box;
+    transform-origin: center;
+
+    &--clickable:hover, &--selected {
+      cursor: pointer;
+      stroke: var(--hover-stroke-color);
+      stroke-width: var(--hover-stroke-width);
+    }
+  }
+}
