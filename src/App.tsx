@@ -1,35 +1,26 @@
 import "./App.scss";
-import Editor from "./Editor.tsx";
-import classNames from "classnames";
-import { useState } from "react";
+import Editor from "./editor/Editor.tsx";
+import { useCallback, useEffect, useState } from "react";
+import { Indicator } from "./Indicator.tsx";
 
-function Indicator({ pos }: { pos: number }) {
-  return (
-    <div style={{ left: `${pos}%` }} className={classNames("indicator")}></div>
-  );
-}
+function App({ audioContext }: { audioContext: AudioContext }) {
+  const [started, setStarted] = useState(false);
 
-function App() {
-  const [context, setContext] = useState<AudioContext | null>(null);
+  const start = useCallback(async () => {
+    setStarted(true);
+    await audioContext.resume();
+  }, [audioContext]);
 
-  const start = () => {
-    const context = new AudioContext();
+  useEffect(() => {
+    if (audioContext.state == "running") {
+      start();
+      return;
+    }
+  }, [audioContext, start]);
 
-    const oscillator = new OscillatorNode(context);
-    oscillator.type = "sine";
-    oscillator.frequency.value = 300;
-    oscillator.start(context.currentTime);
-    const gainNode = new GainNode(context);
-
-    gainNode.gain.value = 0.0;
-
-    oscillator.connect(gainNode).connect(context.destination);
-    setContext(context);
-  };
-
-  return context ? (
+  return started ? (
     <>
-      <Indicator pos={5} />
+      <Indicator />
       <Editor></Editor>
     </>
   ) : (
