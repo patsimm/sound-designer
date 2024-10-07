@@ -2,6 +2,7 @@ import "./App.scss";
 import Editor from "./editor/Editor.tsx";
 import { useCallback, useEffect, useState } from "react";
 import { Indicator } from "./Indicator.tsx";
+import classNames from "classnames";
 
 function App({ audioContext }: { audioContext: AudioContext }) {
   const [started, setStarted] = useState(false);
@@ -24,7 +25,9 @@ function App({ audioContext }: { audioContext: AudioContext }) {
       <Editor></Editor>
     </>
   ) : (
-    <button onClick={start}>start</button>
+    <button className={classNames("start-button")} onClick={start}>
+      start
+    </button>
   );
 }
 

@@ -8,7 +8,6 @@ function startPlayer(context: AudioContext) {
   const soundNodes: { [key: string]: SoundNode } = {};
 
   startLooping(factor, () => {
-    if (context.state !== "running") return;
     const nodeStates = getSoundNodeStates();
     for (const [id, nodeState] of Object.entries(nodeStates)) {
       if (!Object.keys(soundNodes).includes(id)) {
@@ -16,6 +15,7 @@ function startPlayer(context: AudioContext) {
         subscribeToNodeState(id, (nodeState) =>
           soundNodes[id].updateState(nodeState),
         );
+        soundNodes[id].updateState(nodeState);
       }
       soundNodes[id].nextState(nodeState);
     }

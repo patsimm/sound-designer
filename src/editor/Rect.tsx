@@ -25,7 +25,6 @@ export function Rect({
       height={height}
       x={x}
       y={y}
-      fill={"lightgreen"}
     ></rect>
   );
 }
