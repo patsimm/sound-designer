@@ -48,9 +48,9 @@ function Editor() {
     <div className={"editor"} ref={ref}>
       <svg
         className={"editor__content"}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
+        onPointerDown={handleMouseDown}
+        onPointerMove={handleMouseMove}
+        onPointerUp={handleMouseUp}
         onClick={handleClick}
       >
         {Object.entries(nodes).map(([id, config]) => (
