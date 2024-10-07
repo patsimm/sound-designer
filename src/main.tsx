@@ -5,12 +5,13 @@ import "./index.css";
 import startPlayer from "./synth/Player.ts";
 
 const audioContext = new AudioContext();
-await audioContext.suspend();
-
-startPlayer(audioContext);
-
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <App audioContext={audioContext} />
-  </StrictMode>,
-);
+audioContext
+  .suspend()
+  .then(() => startPlayer(audioContext))
+  .then(() =>
+    createRoot(document.getElementById("root")!).render(
+      <StrictMode>
+        <App audioContext={audioContext} />
+      </StrictMode>,
+    ),
+  );
