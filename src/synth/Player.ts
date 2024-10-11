@@ -3,6 +3,7 @@ import { startLooping } from "./Looper.ts";
 import { SoundNode } from "./SoundNode.ts";
 import { factor } from "./bpm.ts";
 import { getSoundNodeStates, subscribeToNodeState } from "./SoundNodeState.ts";
+import { debounce } from "../helpers.ts";
 
 function startPlayer(context: AudioContext) {
   const soundNodes: { [key: string]: SoundNode } = {};
@@ -12,8 +13,9 @@ function startPlayer(context: AudioContext) {
     for (const [id, nodeState] of Object.entries(nodeStates)) {
       if (!Object.keys(soundNodes).includes(id)) {
         soundNodes[id] = new SoundNode(id, context);
-        subscribeToNodeState(id, (nodeState) =>
-          soundNodes[id].updateState(nodeState),
+        subscribeToNodeState(
+          id,
+          debounce((nodeState) => soundNodes[id].updateState(nodeState)),
         );
         soundNodes[id].updateState(nodeState);
       }

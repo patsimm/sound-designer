@@ -20,30 +20,33 @@ export class SoundNode {
     this.gain.connect(context.destination);
   }
 
-  nextState(state: SoundNodeState) {
-    const nextBeatStart = Math.ceil(this.context.currentTime / factor) * factor;
-    this.oscillator.frequency.cancelScheduledValues(nextBeatStart);
-    this.gain.gain.cancelScheduledValues(nextBeatStart);
-
-    const startTime = nextBeatStart + state.pos;
+  schedule(time: number, state: SoundNodeState) {
+    const startTime = time + state.pos;
     const endTime = startTime + factor / 8;
     this.oscillator.frequency.setValueAtTime(state.freq, startTime);
     this.gain.gain.setValueAtTime(0.4, startTime);
     this.gain.gain.setValueAtTime(0, endTime);
   }
 
+  cancelScheduled(time: number) {
+    this.oscillator.frequency.cancelScheduledValues(time);
+    this.gain.gain.cancelScheduledValues(time);
+  }
+
+  nextState(state: SoundNodeState) {
+    const nextBeatStart =
+      Math.floor(this.context.currentTime / factor + 1) * factor;
+
+    this.cancelScheduled(nextBeatStart);
+    this.schedule(nextBeatStart, state);
+  }
+
   updateState(state: SoundNodeState) {
     const currentBeatStart =
       Math.floor(this.context.currentTime / factor) * factor;
-    this.oscillator.frequency.cancelScheduledValues(currentBeatStart);
-    this.gain.gain.cancelScheduledValues(currentBeatStart);
 
-    const startTime = currentBeatStart + state.pos;
-    const endTime = startTime + factor / 8;
-    this.oscillator.frequency.setValueAtTime(state.freq, startTime);
-    this.gain.gain.setValueAtTime(0.4, startTime);
-    this.gain.gain.setValueAtTime(0, endTime);
-
-    this.nextState(state);
+    this.cancelScheduled(currentBeatStart);
+    this.schedule(currentBeatStart, state);
+    this.schedule(currentBeatStart + factor, state);
   }
 }

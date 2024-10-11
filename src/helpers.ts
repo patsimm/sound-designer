@@ -10,3 +10,16 @@ export function mapObjectValues<T, U>(
     {} as { [key: string]: U },
   );
 }
+
+export function debounce<A extends unknown[]>(
+  func: (...args: A) => void,
+  timeout = 300,
+) {
+  let timer: number;
+  return (...args: A) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, timeout);
+  };
+}
