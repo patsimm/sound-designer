@@ -1,10 +1,12 @@
 :root {
-  --color-primary: #5fec4f;
-  --color-secondary: #f141ff;
-  --color-background: dimgray;
+  --color-primary: #0a76f4;
+  --color-secondary: #f43497;
+  --color-background: #191919;
+  --color-foreground: #f4f4f4;
 }
 
 body {
+  color: var(--color-foreground);
   background: var(--color-background);
 }
 
@@ -14,17 +16,18 @@ body {
   width: 10rem;
   height: 6rem;
   font-size: 3rem;
+  color: var(--color-foreground);
   background-color: var(--color-primary);
-  border: 2px solid black;
+  border: 2px solid var(--color-foreground);
   border-radius: 0.5rem;
   cursor: pointer;
-  box-shadow: black 0.5rem 0.5rem;
+  box-shadow: var(--color-foreground) 0.5rem 0.5rem;
 
   &:hover {
     border-color: var(--color-secondary);
     color: var(--color-secondary);
     transform: translate(0.15rem, 0.15rem);
-    box-shadow: black 0.35rem 0.35rem;
+    box-shadow: var(--color-foreground) 0.35rem 0.35rem;
   }
 
   #root:has(&) {
