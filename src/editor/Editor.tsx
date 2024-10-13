@@ -1,38 +1,37 @@
 import "./Editor.scss";
-import { MouseEventHandler, useRef, useState } from "react";
+import { MouseEventHandler, useRef } from "react";
 import { Rect } from "./Rect.tsx";
 import { useAppStore } from "../App.store.ts";
 import useResizeObserver from "@react-hook/resize-observer";
+import ScaleTool from "./ScaleTool.tsx";
+import { DragMoveCallback, useDrag } from "./use-drag.hook.ts";
 
 function Editor() {
   const move = useAppStore((state) => state.move);
   const setSize = useAppStore((state) => state.setSize);
   const nodes = useAppStore((state) => state.nodes);
-  const [draggedElement, setDraggedElement] = useState<SVGElement | null>(null);
 
-  const handleMouseDown: MouseEventHandler<SVGSVGElement> = (ev) => {
-    if (ev.target instanceof SVGElement) setDraggedElement(ev.target);
-    setSelectedNodeId(null);
-  };
-
-  const handleMouseUp: MouseEventHandler<SVGSVGElement> = () => {
-    setDraggedElement(null);
-  };
-
-  const handleMouseMove: MouseEventHandler<SVGSVGElement> = (ev) => {
-    const draggedNodeId = draggedElement?.getAttribute("data-id");
-    if (typeof draggedNodeId != "string") {
+  const handleDragMove: DragMoveCallback = ({ target, x, y }) => {
+    if (!(target instanceof SVGElement)) return;
+    const draggedNodeId = target.getAttribute("data-id");
+    if (draggedNodeId == null) {
       return;
     }
-    ev.preventDefault();
-    move(draggedNodeId, ev.movementX, ev.movementY);
+    move(draggedNodeId, x, y);
   };
 
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const { handlePointerMove, handlePointerDown, handlePointerUp } = useDrag({
+    onDragMove: handleDragMove,
+  });
+
+  const selectedNodeId = useAppStore((state) => state.selectedNodeId);
+  const setSelectedNodeId = useAppStore((state) => state.setSelectedNodeId);
 
   const handleClick: MouseEventHandler<SVGSVGElement> = (ev) => {
-    if (!(ev.target instanceof SVGElement)) return;
-    console.log(ev.target);
+    if (!(ev.target instanceof SVGElement)) {
+      setSelectedNodeId(null);
+      return;
+    }
     const clickedNodeId = ev.target.getAttribute("data-id");
     setSelectedNodeId(clickedNodeId);
   };
@@ -48,14 +47,15 @@ function Editor() {
     <div className={"editor"} ref={ref}>
       <svg
         className={"editor__content"}
-        onPointerDown={handleMouseDown}
-        onPointerMove={handleMouseMove}
-        onPointerUp={handleMouseUp}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
         onClick={handleClick}
       >
         {Object.entries(nodes).map(([id, config]) => (
           <Rect key={id} id={id} selected={selectedNodeId === id} {...config} />
         ))}
+        <ScaleTool></ScaleTool>
       </svg>
     </div>
   );

@@ -11,12 +11,14 @@ export type State = {
     [id: string]: Node;
   };
   indicatorPos: number;
+  selectedNodeId: string | null;
 };
 
 type Actions = {
   move: (nodeId: string, movementX: number, movementY: number) => void;
   setSize: (width: number, height: number) => void;
   setIndicatorPos: (pos: number) => void;
+  setSelectedNodeId: (nodeId: string | null) => void;
 };
 
 function lerp(v0: number, v1: number, t: number) {
@@ -40,6 +42,7 @@ export const useAppStore = create<State & Actions>()(
       "4": { x: 300, y: 300, width: 20, height: 20 },
     },
     indicatorPos: 0,
+    selectedNodeId: null,
     move: (nodeId: string, movementX: number, movementY: number) =>
       set((state: State) => {
         state.nodes[nodeId].x += movementX;
@@ -62,6 +65,10 @@ export const useAppStore = create<State & Actions>()(
     setIndicatorPos: (indicatorPos: number) =>
       set((state: State) => {
         state.indicatorPos = indicatorPos;
+      }),
+    setSelectedNodeId: (nodeId: string | null) =>
+      set((state: State) => {
+        state.selectedNodeId = nodeId;
       }),
   })),
 );

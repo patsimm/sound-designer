@@ -21,10 +21,34 @@
     transform-origin: center;
     fill: var(--color-primary);
 
-    &--clickable:hover, &--selected {
+    &--clickable {
       cursor: pointer;
-      stroke: var(--hover-stroke-color);
-      stroke-width: var(--hover-stroke-width);
+
+      &:hover {
+        stroke: var(--hover-stroke-color);
+        stroke-width: var(--hover-stroke-width);
+      }
+    }
+  }
+
+  &__scale_node {
+    fill: var(--color-secondary);
+    stroke: none;
+
+    &[data-dir="ne"] {
+      cursor: ne-resize;
+    }
+
+    &[data-dir="nw"] {
+      cursor: nw-resize;
+    }
+
+    &[data-dir="se"] {
+      cursor: se-resize;
+    }
+
+    &[data-dir="sw"] {
+      cursor: sw-resize;
     }
   }
 }
