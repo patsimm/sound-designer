@@ -4,6 +4,7 @@ import { mapObjectValues } from "../helpers.ts";
 
 export type SoundNodeState = {
   pos: number;
+  length: number;
   freq: number;
 };
 
@@ -11,6 +12,7 @@ function computeSoundNodeState(node: Node, state: State): SoundNodeState {
   return {
     pos: (node.x / state.size[0]) * factor,
     freq: 100 + ((state.size[1] - node.y) / state.size[1]) * 800,
+    length: (node.width / state.size[0]) * factor,
   };
 }
 

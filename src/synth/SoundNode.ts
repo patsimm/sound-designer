@@ -22,7 +22,7 @@ export class SoundNode {
 
   schedule(time: number, state: SoundNodeState) {
     const startTime = time + state.pos;
-    const endTime = startTime + factor / 8;
+    const endTime = startTime + state.length;
     this.oscillator.frequency.setValueAtTime(state.freq, startTime);
     this.gain.gain.setValueAtTime(0.4, startTime);
     this.gain.gain.setValueAtTime(0, endTime);

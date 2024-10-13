@@ -1,43 +1,61 @@
-import { PointerEvent, PointerEventHandler, useRef } from "react";
+import { useCallback, useEffect } from "react";
 
-export type DragMoveCallback = (movement: {
+type UseDragMoveDetail = {
   target: EventTarget;
   x: number;
   y: number;
-}) => void;
+  pointerX: number;
+  pointerY: number;
+};
+export type UseDragMoveCallback = (movement: UseDragMoveDetail) => void;
 
-export function useDrag({ onDragMove }: { onDragMove: DragMoveCallback }) {
-  const lastEvent = useRef<PointerEvent>();
-  const draggedElementRef = useRef<EventTarget>();
+let lastEvent: PointerEvent | null = null;
+let draggedElement: EventTarget | null = null;
 
-  const handlePointerDown: PointerEventHandler = (ev) => {
-    lastEvent.current = ev;
-    draggedElementRef.current = ev.target;
-  };
+const handlePointerDown = (ev: PointerEvent) => {
+  lastEvent = ev;
+  draggedElement = ev.target;
+};
 
-  const handlePointerUp: PointerEventHandler = () => {
-    lastEvent.current = undefined;
-    draggedElementRef.current = undefined;
-  };
+const handlePointerUp = () => {
+  lastEvent = null;
+  draggedElement = null;
+};
 
-  const handlePointerMove: PointerEventHandler = (ev) => {
-    if (
-      lastEvent.current?.pointerId !== ev.pointerId ||
-      !draggedElementRef.current
-    )
-      return;
-    ev.preventDefault();
-    onDragMove({
-      target: draggedElementRef.current,
-      x: -(lastEvent.current.screenX - ev.screenX),
-      y: -(lastEvent.current.screenY - ev.screenY),
-    });
-    lastEvent.current = ev;
-  };
+const handlePointerMove = (ev: PointerEvent) => {
+  if (lastEvent?.pointerId !== ev.pointerId || draggedElement === null) {
+    draggedElement = null;
+    return;
+  }
+  ev.preventDefault();
+  document.dispatchEvent(
+    new CustomEvent<UseDragMoveDetail>("usedragmove", {
+      detail: {
+        target: draggedElement,
+        x: ev.clientX - lastEvent.clientX,
+        y: ev.clientY - lastEvent.clientY,
+        pointerX: ev.clientX,
+        pointerY: ev.clientY,
+      },
+    }),
+  );
+  lastEvent = ev;
+};
 
-  return {
-    handlePointerUp,
-    handlePointerDown,
-    handlePointerMove,
-  };
+document.addEventListener("pointerdown", handlePointerDown);
+document.addEventListener("pointerup", handlePointerUp);
+document.addEventListener("pointermove", handlePointerMove);
+
+export function useDrag({ onDragMove }: { onDragMove: UseDragMoveCallback }) {
+  const handleDragMove = useCallback(
+    (ev: Event) => {
+      if (!(ev instanceof CustomEvent)) return;
+      onDragMove(ev.detail);
+    },
+    [onDragMove],
+  );
+  useEffect(() => {
+    document.addEventListener("usedragmove", handleDragMove);
+    return () => document.removeEventListener("usedragmove", handleDragMove);
+  }, [handleDragMove, onDragMove]);
 }

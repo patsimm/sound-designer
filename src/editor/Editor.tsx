@@ -20,7 +20,7 @@ function Editor() {
     move(draggedNodeId, x, y);
   };
 
-  const { handlePointerMove, handlePointerDown, handlePointerUp } = useDrag({
+  useDrag({
     onDragMove: handleDragMove,
   });
 
@@ -45,13 +45,7 @@ function Editor() {
 
   return (
     <div className={"editor"} ref={ref}>
-      <svg
-        className={"editor__content"}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onClick={handleClick}
-      >
+      <svg className={"editor__content"} onClick={handleClick}>
         {Object.entries(nodes).map(([id, config]) => (
           <Rect key={id} id={id} selected={selectedNodeId === id} {...config} />
         ))}
