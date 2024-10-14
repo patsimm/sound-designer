@@ -4,14 +4,14 @@ import { Rect } from "./Rect.tsx";
 import { useAppStore } from "../App.store.ts";
 import useResizeObserver from "@react-hook/resize-observer";
 import ScaleTool from "./ScaleTool.tsx";
-import { DragMoveCallback, useDrag } from "./use-drag.hook.ts";
+import { UseDragMoveCallback, useDrag } from "./use-drag.hook.ts";
 
 function Editor() {
   const move = useAppStore((state) => state.move);
   const setSize = useAppStore((state) => state.setSize);
   const nodes = useAppStore((state) => state.nodes);
 
-  const handleDragMove: DragMoveCallback = ({ target, x, y }) => {
+  const handleDragMove: UseDragMoveCallback = ({ target, x, y }) => {
     if (!(target instanceof SVGElement)) return;
     const draggedNodeId = target.getAttribute("data-id");
     if (draggedNodeId == null) {
@@ -47,7 +47,7 @@ function Editor() {
     <div className={"editor"} ref={ref}>
       <svg className={"editor__content"} onClick={handleClick}>
         {Object.entries(nodes).map(([id, config]) => (
-          <Rect key={id} id={id} selected={selectedNodeId === id} {...config} />
+          <Rect key={id} selected={selectedNodeId === id} {...config} />
         ))}
         <ScaleTool></ScaleTool>
       </svg>
