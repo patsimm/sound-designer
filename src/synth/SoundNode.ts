@@ -1,5 +1,5 @@
 import { SoundNodeState } from "./SoundNodeState.ts";
-import { factor } from "./bpm.ts";
+import { beatEnd, beatStart } from "./bpm.ts";
 
 export class SoundNode {
   id: string;
@@ -21,7 +21,7 @@ export class SoundNode {
   }
 
   schedule(time: number, state: SoundNodeState) {
-    const startTime = time + state.pos;
+    const startTime = time + state.time;
     const endTime = startTime + state.length;
     this.oscillator.frequency.setValueAtTime(state.freq, startTime);
     this.gain.gain.setValueAtTime(0.4, startTime);
@@ -33,20 +33,17 @@ export class SoundNode {
     this.gain.gain.cancelScheduledValues(time);
   }
 
-  nextState(state: SoundNodeState) {
-    const nextBeatStart =
-      Math.floor(this.context.currentTime / factor + 1) * factor;
-
-    this.cancelScheduled(nextBeatStart);
+  updateState(state: SoundNodeState) {
+    const currentBeatStart = beatStart(this.context.currentTime);
+    const nextBeatStart = beatStart(this.context.currentTime);
+    this.cancelScheduled(currentBeatStart);
+    this.schedule(currentBeatStart, state);
     this.schedule(nextBeatStart, state);
   }
 
-  updateState(state: SoundNodeState) {
-    const currentBeatStart =
-      Math.floor(this.context.currentTime / factor) * factor;
-
-    this.cancelScheduled(currentBeatStart);
-    this.schedule(currentBeatStart, state);
-    this.schedule(currentBeatStart + factor, state);
+  nextState(state: SoundNodeState) {
+    const nextBeatStart = beatEnd(this.context.currentTime);
+    this.cancelScheduled(nextBeatStart);
+    this.schedule(nextBeatStart, state);
   }
 }

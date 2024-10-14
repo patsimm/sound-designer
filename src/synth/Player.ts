@@ -1,14 +1,15 @@
 import { useAppStore } from "../App.store.ts";
 import { startLooping } from "./Looper.ts";
 import { SoundNode } from "./SoundNode.ts";
-import { factor } from "./bpm.ts";
+import { calcLoopLength, timeToPos } from "./bpm.ts";
 import { getSoundNodeStates, subscribeToNodeState } from "./SoundNodeState.ts";
 import { debounce } from "../helpers.ts";
 
 function startPlayer(context: AudioContext) {
   const soundNodes: { [key: string]: SoundNode } = {};
+  const { bpm } = useAppStore.getState();
 
-  startLooping(factor, () => {
+  const setUpdateInterval = startLooping(calcLoopLength(bpm), () => {
     const nodeStates = getSoundNodeStates();
     for (const [id, nodeState] of Object.entries(nodeStates)) {
       if (!Object.keys(soundNodes).includes(id)) {
@@ -23,9 +24,15 @@ function startPlayer(context: AudioContext) {
     }
   });
 
+  useAppStore.subscribe(
+    (state, prevState) =>
+      state.bpm !== prevState.bpm &&
+      setUpdateInterval(calcLoopLength(state.bpm)),
+  );
+
   const updateFactor = () => {
-    const pos = (context.currentTime % factor) / factor;
-    useAppStore.getState().setIndicatorPos(pos * 100);
+    const pos = timeToPos(context.currentTime);
+    useAppStore.getState().setIndicatorPos(pos);
     requestAnimationFrame(() => updateFactor());
   };
   updateFactor();

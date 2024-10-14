@@ -7,7 +7,7 @@ export function Indicator() {
   return (
     <div
       className={classNames("time-indicator__container")}
-      style={{ transform: `translateX(${pos}%)` }}
+      style={{ transform: `translateX(${pos}px)` }}
     >
       <div className={classNames("time-indicator__indicator")}></div>
     </div>

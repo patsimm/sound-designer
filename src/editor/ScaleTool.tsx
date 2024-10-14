@@ -41,7 +41,7 @@ function ScaleTool() {
       resize(selectedNode.id, resizeX * xSign, resizeY * ySign);
       move(selectedNode.id, xSign > 0 ? 0 : resizeX, ySign > 0 ? 0 : resizeY);
     },
-    [move, resize, selectedNode],
+    [minSizeRect, move, resize, selectedNode],
   );
 
   useDrag({

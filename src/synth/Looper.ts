@@ -4,6 +4,10 @@ export function startLooping(updateInterval: number, callback: () => void) {
       /* javascript */ `
 			// the initial timeout time
 			let timeoutTime =  ${(updateInterval * 1000).toFixed(1)};
+			// onmessage callback
+            self.onmessage = function(msg){
+              timeoutTime = parseInt(msg.data);
+            };
 			// the tick function which posts a message
 			// and schedules a new tick
 			function tick(){
@@ -20,4 +24,8 @@ export function startLooping(updateInterval: number, callback: () => void) {
   const worker = new Worker(blobUrl);
 
   worker.onmessage = callback;
+
+  return (updateInterval: number): void => {
+    worker.postMessage(updateInterval * 1000);
+  };
 }

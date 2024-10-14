@@ -1,18 +1,18 @@
 import { Node, State, useAppStore } from "../App.store.ts";
-import { factor } from "./bpm.ts";
+import { posToTime } from "./bpm.ts";
 import { mapObjectValues } from "../helpers.ts";
 
 export type SoundNodeState = {
-  pos: number;
+  time: number;
   length: number;
   freq: number;
 };
 
 function computeSoundNodeState(node: Node, state: State): SoundNodeState {
   return {
-    pos: (node.x / state.size[0]) * factor,
+    time: posToTime(node.x),
     freq: 100 + ((state.size[1] - node.y) / state.size[1]) * 800,
-    length: (node.width / state.size[0]) * factor,
+    length: posToTime(node.width),
   };
 }
 

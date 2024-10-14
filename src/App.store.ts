@@ -6,6 +6,7 @@ type Rect = { id: string; x: number; y: number; width: number; height: number };
 export type Node = Rect;
 
 export type State = {
+  bpm: number;
   size: readonly [number, number];
   minSizeRect: readonly [number, number];
   nodes: {
@@ -36,6 +37,7 @@ const prepareScale =
 
 export const useAppStore = create<State & Actions>()(
   immer((set) => ({
+    bpm: 160,
     size: [400, 400],
     minSizeRect: [10, 10],
     nodes: {
@@ -73,6 +75,7 @@ export const useAppStore = create<State & Actions>()(
           scaleX(state.minSizeRect[0]),
           scaleY(state.minSizeRect[1]),
         ];
+        state.indicatorPos = scaleX(state.indicatorPos);
         state.size = [width, height];
       }),
     setIndicatorPos: (indicatorPos: number) =>
