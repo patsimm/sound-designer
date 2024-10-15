@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-hook/resize-observer": "^2.0.2",
     "@tonaljs/note": "^4.11.0",
+    "@tonaljs/scale": "^4.13.0",
     "classnames": "^2.5.1",
     "immer": "^10.1.1",
     "react": "^18.3.1",

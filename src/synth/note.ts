@@ -1,10 +1,12 @@
-import * as Note from "@tonaljs/note";
+import * as Scale from "@tonaljs/scale";
 import { useAppStore } from "../App.store.ts";
 
 const availableNotes = 24;
-const base = 60;
+const base = 0;
 
-export function posToFreq(pos: number) {
+const c4major = Scale.steps("C4 mixolydian");
+
+export function posToNote(pos: number) {
   const { size } = useAppStore.getState();
   const height = size[1];
   const noteMidi =
@@ -15,9 +17,10 @@ export function posToFreq(pos: number) {
         12 +
         Math.ceil(((height - pos) / height) * (availableNotes + 1));
 
-  const freq = Note.freq(Note.fromMidi(noteMidi));
+  console.log(noteMidi);
+  const freq = c4major(noteMidi);
   if (freq === null) {
-    throw new Error("could not determine note frequency!");
+    throw new Error(`could not determine note frequency! ${noteMidi}`);
   }
   return freq;
 }

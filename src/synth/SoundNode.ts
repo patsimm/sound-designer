@@ -1,13 +1,15 @@
 import { SoundNodeState } from "./SoundNodeState.ts";
 import { beatEnd, beatStart } from "./bpm.ts";
+import * as Note from "@tonaljs/note";
 
 export class SoundNode {
   id: string;
+  private _state: SoundNodeState;
   context: AudioContext;
   oscillator: OscillatorNode;
   gain: GainNode;
 
-  constructor(id: string, context: AudioContext) {
+  constructor(id: string, state: SoundNodeState, context: AudioContext) {
     this.id = id;
     this.context = context;
     this.oscillator = context.createOscillator();
@@ -18,14 +20,24 @@ export class SoundNode {
     this.oscillator.connect(this.gain);
 
     this.gain.connect(context.destination);
+
+    this._state = state;
+    this.schedule(context.currentTime);
   }
 
-  schedule(time: number, state: SoundNodeState) {
-    const startTime = time + state.time;
-    const endTime = startTime + state.length;
-    this.oscillator.frequency.setValueAtTime(state.freq, startTime);
-    this.gain.gain.setValueAtTime(0.4, startTime);
-    this.gain.gain.setValueAtTime(0, endTime);
+  schedule(time: number) {
+    const startTime = time + this._state.time;
+    const endTime = startTime + this._state.length;
+    const freq = Note.freq(this._state.note);
+    if (freq === null) {
+      console.error(`Cannot determine frequency for note ${this._state.note}`);
+      return;
+    }
+    this.oscillator.frequency.linearRampToValueAtTime(freq, startTime);
+    this.gain.gain.setValueAtTime(0, startTime - 0.001);
+    this.gain.gain.linearRampToValueAtTime(0.4, startTime + 0.001);
+    this.gain.gain.setValueAtTime(0.4, endTime - 0.001);
+    this.gain.gain.linearRampToValueAtTime(0, endTime);
   }
 
   cancelScheduled(time: number) {
@@ -34,16 +46,17 @@ export class SoundNode {
   }
 
   updateState(state: SoundNodeState) {
+    this._state = state;
     const currentBeatStart = beatStart(this.context.currentTime);
-    const nextBeatStart = beatStart(this.context.currentTime);
+    const nextBeatStart = beatEnd(this.context.currentTime);
     this.cancelScheduled(currentBeatStart);
-    this.schedule(currentBeatStart, state);
-    this.schedule(nextBeatStart, state);
+    this.schedule(currentBeatStart);
+    this.schedule(nextBeatStart);
   }
 
-  nextState(state: SoundNodeState) {
+  loop() {
     const nextBeatStart = beatEnd(this.context.currentTime);
     this.cancelScheduled(nextBeatStart);
-    this.schedule(nextBeatStart, state);
+    this.schedule(nextBeatStart);
   }
 }

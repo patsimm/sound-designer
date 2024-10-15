@@ -13,14 +13,13 @@ function startPlayer(context: AudioContext) {
     const nodeStates = getSoundNodeStates();
     for (const [id, nodeState] of Object.entries(nodeStates)) {
       if (!Object.keys(soundNodes).includes(id)) {
-        soundNodes[id] = new SoundNode(id, context);
+        soundNodes[id] = new SoundNode(id, nodeState, context);
         subscribeToNodeState(
           id,
           debounce((nodeState) => soundNodes[id].updateState(nodeState)),
         );
-        soundNodes[id].updateState(nodeState);
       }
-      soundNodes[id].nextState(nodeState);
+      soundNodes[id].loop();
     }
   });
 
