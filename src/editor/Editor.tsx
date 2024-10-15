@@ -1,5 +1,5 @@
 import "./Editor.scss";
-import { MouseEventHandler, useRef } from "react";
+import { PointerEventHandler, useRef } from "react";
 import { Rect } from "./Rect.tsx";
 import { useAppStore } from "../App.store.ts";
 import useResizeObserver from "@react-hook/resize-observer";
@@ -12,12 +12,13 @@ function Editor() {
   const nodes = useAppStore((state) => state.nodes);
 
   const handleDragMove: UseDragMoveCallback = ({ target, x, y }) => {
-    if (!(target instanceof SVGElement)) return;
+    if (!(target instanceof SVGElement)) return false;
     const draggedNodeId = target.getAttribute("data-id");
-    if (draggedNodeId == null) {
-      return;
-    }
+    if (draggedNodeId == null) return false;
+
     move(draggedNodeId, x, y);
+    setSelectedNodeId(draggedNodeId);
+    return true;
   };
 
   useDrag({
@@ -27,7 +28,7 @@ function Editor() {
   const selectedNodeId = useAppStore((state) => state.selectedNodeId);
   const setSelectedNodeId = useAppStore((state) => state.setSelectedNodeId);
 
-  const handleClick: MouseEventHandler<SVGSVGElement> = (ev) => {
+  const handlePointerUp: PointerEventHandler<SVGSVGElement> = (ev) => {
     if (!(ev.target instanceof SVGElement)) {
       setSelectedNodeId(null);
       return;
@@ -45,7 +46,7 @@ function Editor() {
 
   return (
     <div className={"editor"} ref={ref}>
-      <svg className={"editor__content"} onClick={handleClick}>
+      <svg className={"editor__content"} onPointerUp={handlePointerUp}>
         {Object.entries(nodes).map(([id, config]) => (
           <Rect key={id} selected={selectedNodeId === id} {...config} />
         ))}

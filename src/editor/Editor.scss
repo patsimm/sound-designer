@@ -35,20 +35,12 @@
     fill: var(--color-secondary);
     stroke: none;
 
-    &[data-dir="ne"] {
-      cursor: ne-resize;
+    &[data-dir="ne"], &[data-dir="sw"] {
+      cursor: nesw-resize;
     }
 
-    &[data-dir="nw"] {
-      cursor: nw-resize;
-    }
-
-    &[data-dir="se"] {
-      cursor: se-resize;
-    }
-
-    &[data-dir="sw"] {
-      cursor: sw-resize;
+    &[data-dir="nw"], &[data-dir="se"] {
+      cursor: nwse-resize;
     }
   }
 }

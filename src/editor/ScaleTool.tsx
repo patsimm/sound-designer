@@ -13,9 +13,9 @@ function ScaleTool() {
 
   const handleDragMove: UseDragMoveCallback = useCallback(
     ({ target, pointerX, pointerY }) => {
-      if (!(target instanceof Element) || selectedNode == null) return;
+      if (!(target instanceof Element) || selectedNode == null) return false;
       const dir = target.getAttribute("data-dir");
-      if (dir === null) return;
+      if (dir === null) return false;
 
       const rect = target.getBoundingClientRect();
       const posX = rect.x + rect.width / 2;
@@ -38,6 +38,7 @@ function ScaleTool() {
 
       resize(selectedNode.id, resizeX * xSign, resizeY * ySign);
       move(selectedNode.id, xSign > 0 ? 0 : resizeX, ySign > 0 ? 0 : resizeY);
+      return true;
     },
     [minSizeRect, move, resize, selectedNode],
   );

@@ -13,7 +13,7 @@ export type SoundNodeState = {
 function computeSoundNodeState(node: Node): SoundNodeState {
   return {
     time: posToTime(node.x),
-    note: posToNote(node.y + node.height / 2),
+    note: posToNote(node.y + node.height),
     length: posToTime(node.width),
     chordNotes: posToChordNotes(node.height),
   };
