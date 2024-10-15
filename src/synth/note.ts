@@ -17,10 +17,15 @@ export function posToNote(pos: number) {
         12 +
         Math.ceil(((height - pos) / height) * (availableNotes + 1));
 
-  console.log(noteMidi);
   const freq = c4major(noteMidi);
   if (freq === null) {
     throw new Error(`could not determine note frequency! ${noteMidi}`);
   }
   return freq;
+}
+
+export function posToChordNotes(pos: number) {
+  const { size } = useAppStore.getState();
+  const height = size[1];
+  return Math.max(Math.floor((pos / height) * availableNotes), 1);
 }

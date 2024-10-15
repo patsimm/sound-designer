@@ -1,39 +1,62 @@
 import { SoundNodeState } from "./SoundNodeState.ts";
 import { beatEnd, beatStart } from "./bpm.ts";
+import * as Chord from "@tonaljs/chord";
 import * as Note from "@tonaljs/note";
 
 export class SoundNode {
   id: string;
-  private _state: SoundNodeState;
   context: AudioContext;
-  oscillator: OscillatorNode;
+  oscillators: OscillatorNode[];
   gain: GainNode;
+
+  #state: SoundNodeState;
+  get state() {
+    return this.#state;
+  }
+  set state(state: SoundNodeState) {
+    this.#state = state;
+    this.setupState();
+  }
 
   constructor(id: string, state: SoundNodeState, context: AudioContext) {
     this.id = id;
     this.context = context;
-    this.oscillator = context.createOscillator();
-    this.oscillator.type = "sine";
-    this.oscillator.start(context.currentTime);
+
     this.gain = context.createGain();
     this.gain.gain.value = 0;
-    this.oscillator.connect(this.gain);
+
+    this.oscillators = [];
 
     this.gain.connect(context.destination);
 
-    this._state = state;
-    this.schedule(context.currentTime);
+    this.#state = state;
+    this.setupState();
+  }
+
+  private createOscillator() {
+    const oscillator = this.context.createOscillator();
+    oscillator.type = "sawtooth";
+    oscillator.start(this.context.currentTime);
+
+    oscillator.connect(this.gain);
+    return oscillator;
   }
 
   schedule(time: number) {
-    const startTime = time + this._state.time;
-    const endTime = startTime + this._state.length;
-    const freq = Note.freq(this._state.note);
-    if (freq === null) {
-      console.error(`Cannot determine frequency for note ${this._state.note}`);
-      return;
-    }
-    this.oscillator.frequency.linearRampToValueAtTime(freq, startTime);
+    const startTime = time + this.#state.time;
+    const endTime = startTime + this.#state.length;
+
+    const degrees = Chord.degrees("sus", this.#state.note);
+    this.oscillators.forEach((oscillator, index) => {
+      const freq = Note.freq(degrees(index + 1));
+      if (freq === null) {
+        console.error(
+          `Cannot determine frequency for note ${this.#state.note}`,
+        );
+        return;
+      }
+      oscillator.frequency.linearRampToValueAtTime(freq, startTime);
+    });
     this.gain.gain.setValueAtTime(0, startTime - 0.001);
     this.gain.gain.linearRampToValueAtTime(0.4, startTime + 0.001);
     this.gain.gain.setValueAtTime(0.4, endTime - 0.001);
@@ -41,12 +64,26 @@ export class SoundNode {
   }
 
   cancelScheduled(time: number) {
-    this.oscillator.frequency.cancelScheduledValues(time);
+    this.oscillators.forEach((oscillator) =>
+      oscillator.frequency.cancelScheduledValues(time),
+    );
     this.gain.gain.cancelScheduledValues(time);
   }
 
-  updateState(state: SoundNodeState) {
-    this._state = state;
+  private setupState() {
+    if (this.oscillators.length > this.#state.chordNotes) {
+      this.oscillators.slice(this.#state.chordNotes).forEach((oscillator) => {
+        oscillator.stop();
+      });
+      this.oscillators = this.oscillators.slice(0, this.#state.chordNotes);
+    }
+
+    if (this.oscillators.length < this.#state.chordNotes) {
+      for (let i = this.oscillators.length; i < this.#state.chordNotes; i++) {
+        this.oscillators = [...this.oscillators, this.createOscillator()];
+      }
+    }
+
     const currentBeatStart = beatStart(this.context.currentTime);
     const nextBeatStart = beatEnd(this.context.currentTime);
     this.cancelScheduled(currentBeatStart);

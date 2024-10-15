@@ -36,8 +36,6 @@ function ScaleTool() {
           ? (selectedNode.height - minSizeRect[1]) * -ySign
           : y;
 
-      console.log(x, y);
-
       resize(selectedNode.id, resizeX * xSign, resizeY * ySign);
       move(selectedNode.id, xSign > 0 ? 0 : resizeX, ySign > 0 ? 0 : resizeY);
     },

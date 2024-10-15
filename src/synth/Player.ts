@@ -16,7 +16,7 @@ function startPlayer(context: AudioContext) {
         soundNodes[id] = new SoundNode(id, nodeState, context);
         subscribeToNodeState(
           id,
-          debounce((nodeState) => soundNodes[id].updateState(nodeState)),
+          debounce((nodeState) => (soundNodes[id].state = nodeState)),
         );
       }
       soundNodes[id].loop();
