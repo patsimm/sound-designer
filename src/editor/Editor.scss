@@ -1,6 +1,5 @@
 .editor {
   --hover-stroke-width: 3px;
-  --hover-stroke-color: var(--color-secondary);
 
   width: 100%;
   height: 100%;
@@ -23,11 +22,6 @@
 
     &--clickable {
       cursor: pointer;
-
-      &:hover {
-        stroke: var(--hover-stroke-color);
-        stroke-width: var(--hover-stroke-width);
-      }
     }
   }
 

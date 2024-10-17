@@ -82,8 +82,8 @@ function ScaleToolNode({ x, y, dir }: ScaleToolNodeProps) {
     <rect
       className={classNames("editor__scale_node")}
       data-dir={dir}
-      x={x - 5}
-      y={y - 5}
+      x={x + (dir == "sw" || dir == "nw" ? -10 : 0)}
+      y={y + (dir == "se" || dir == "sw" ? 0 : -10)}
       width={10}
       height={10}
     ></rect>
