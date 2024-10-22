@@ -1,27 +1,34 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-
-type Rect = { id: string; x: number; y: number; width: number; height: number };
-
-export type Node = Rect;
+import { EditorNode } from "./editor/entities.ts";
+import { TOOL_MOVE, ToolType } from "./editor/tools/tools.ts";
+import { v7 as uuid } from "uuid";
 
 export type State = {
   bpm: number;
   size: readonly [number, number];
-  minSizeRect: readonly [number, number];
+  minSizeNode: readonly [number, number];
   nodes: {
-    [id: string]: Node;
+    [id: string]: EditorNode;
   };
   indicatorPos: number;
   selectedNodeId: string | null;
+  tool: ToolType;
 };
 
 type Actions = {
   move: (nodeId: string, movementX: number, movementY: number) => void;
   resize: (nodeId: string, x: number, y: number) => void;
-  setSize: (width: number, height: number) => void;
+  setCanvasSize: (width: number, height: number) => void;
   setIndicatorPos: (pos: number) => void;
   setSelectedNodeId: (nodeId: string | null) => void;
+  setTool: (tool: ToolType) => void;
+  addRect: (
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) => string | undefined;
 };
 
 function lerp(v0: number, v1: number, t: number) {
@@ -39,7 +46,7 @@ export const useAppStore = create<State & Actions>()(
   immer((set) => ({
     bpm: 160,
     size: [400, 400],
-    minSizeRect: [10, 10],
+    minSizeNode: [10, 10],
     nodes: {
       "1": { id: "1", x: 0, y: 200, width: 60, height: 20 },
       "2": { id: "2", x: 100, y: 100, width: 60, height: 20 },
@@ -48,6 +55,7 @@ export const useAppStore = create<State & Actions>()(
     },
     indicatorPos: 0,
     selectedNodeId: null,
+    tool: TOOL_MOVE,
     move: (nodeId: string, movementX: number, movementY: number) =>
       set((state: State) => {
         state.nodes[nodeId].x += movementX;
@@ -58,7 +66,7 @@ export const useAppStore = create<State & Actions>()(
         state.nodes[nodeId].width += x;
         state.nodes[nodeId].height += y;
       }),
-    setSize: (width: number, height: number) =>
+    setCanvasSize: (width: number, height: number) =>
       set((state: State) => {
         const scaleX = prepareScale(0, state.size[0], 0, width);
         const scaleY = prepareScale(0, state.size[1], 0, height);
@@ -71,9 +79,9 @@ export const useAppStore = create<State & Actions>()(
             height: scaleY(state.nodes[id].height),
           };
         }
-        state.minSizeRect = [
-          scaleX(state.minSizeRect[0]),
-          scaleY(state.minSizeRect[1]),
+        state.minSizeNode = [
+          scaleX(state.minSizeNode[0]),
+          scaleY(state.minSizeNode[1]),
         ];
         state.indicatorPos = scaleX(state.indicatorPos);
         state.size = [width, height];
@@ -86,5 +94,23 @@ export const useAppStore = create<State & Actions>()(
       set((state: State) => {
         state.selectedNodeId = nodeId;
       }),
+    setTool: (tool: ToolType) =>
+      set((state: State) => {
+        state.tool = tool;
+      }),
+    addRect: (x: number, y: number, width: number, height: number) => {
+      let newId: string | undefined;
+      set((state: State) => {
+        if (width < state.minSizeNode[0] || height < state.minSizeNode[1]) {
+          return;
+        }
+        newId = uuid();
+        state.nodes = {
+          ...state.nodes,
+          [newId]: { id: newId, x, y, width, height },
+        };
+      });
+      return newId;
+    },
   })),
 );

@@ -1,7 +1,8 @@
-import { Node, useAppStore } from "../App.store.ts";
+import { useAppStore } from "../App.store.ts";
 import { posToTime } from "./bpm.ts";
 import { mapObjectValues } from "../helpers.ts";
 import { posToChordNotes, posToNote } from "./note.ts";
+import { EditorNode } from "../editor/entities.ts";
 
 export type SoundNodeState = {
   time: number;
@@ -10,7 +11,7 @@ export type SoundNodeState = {
   chordNotes: number;
 };
 
-function computeSoundNodeState(node: Node): SoundNodeState {
+function computeSoundNodeState(node: EditorNode): SoundNodeState {
   return {
     time: posToTime(node.x),
     note: posToNote(node.y + node.height),

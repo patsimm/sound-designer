@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { ENTITY_NODE, entityTypeProps } from "./entities.ts";
 
 export function Rect({
   id,
@@ -25,6 +26,7 @@ export function Rect({
       height={height}
       x={x}
       y={y}
+      {...entityTypeProps(ENTITY_NODE)}
     ></rect>
   );
 }

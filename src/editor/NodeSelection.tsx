@@ -1,8 +1,12 @@
-import { Node } from "../App.store.ts";
 import { useDrag, UseDragMoveCallback } from "./use-drag.hook.ts";
 import { useCallback } from "react";
 import SelectionAnchor, { SELECTION_ANCHOR_SIZE } from "./SelectionAnchor.tsx";
 import { AnchorDirection, isAnchorDirection } from "./anchor-direction.ts";
+import {
+  EditorNode,
+  ENTITY_SELECTION_ANCHOR,
+  isElementOfEntityType,
+} from "./entities.ts";
 
 export type SelectionAnchorMoveEventHandler = (
   dir: AnchorDirection,
@@ -11,7 +15,7 @@ export type SelectionAnchorMoveEventHandler = (
 ) => void;
 
 export type NodeSelectionProps = {
-  node: Node;
+  node: EditorNode;
   onSelectionAnchorMove: SelectionAnchorMoveEventHandler;
 };
 
@@ -19,6 +23,7 @@ function NodeSelection({ node, onSelectionAnchorMove }: NodeSelectionProps) {
   const handleDragMove: UseDragMoveCallback = useCallback(
     ({ target, pointerX, pointerY }) => {
       if (!(target instanceof Element)) return false;
+      if (!isElementOfEntityType(target, ENTITY_SELECTION_ANCHOR)) return false;
       const dir = target.getAttribute("data-dir");
       if (dir === null || !isAnchorDirection(dir)) return false;
 

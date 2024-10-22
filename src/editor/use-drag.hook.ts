@@ -8,6 +8,7 @@ type UseDragMoveDetail = {
   pointerY: number;
 };
 export type UseDragMoveCallback = (movement: UseDragMoveDetail) => boolean;
+export type UseDragEndCallback = () => void;
 
 let lastEvent: PointerEvent | null = null;
 let draggedElement: EventTarget | null = null;
@@ -19,6 +20,10 @@ const handlePointerDown = (ev: PointerEvent) => {
 };
 
 const handlePointerUp = (ev: PointerEvent) => {
+  if (draggedElement != null) {
+    const customEvent = new CustomEvent<UseDragMoveDetail>("usedragend");
+    document.dispatchEvent(customEvent);
+  }
   lastEvent = null;
   draggedElement = null;
   if (preventDefaultMouseUp) {
@@ -56,7 +61,13 @@ document.addEventListener("pointerdown", handlePointerDown);
 document.addEventListener("pointerup", handlePointerUp, { capture: true });
 document.addEventListener("pointermove", handlePointerMove);
 
-export function useDrag({ onDragMove }: { onDragMove: UseDragMoveCallback }) {
+export function useDrag({
+  onDragMove,
+  onDragEnd,
+}: {
+  onDragMove: UseDragMoveCallback;
+  onDragEnd?: UseDragEndCallback;
+}) {
   const handleDragMove = useCallback(
     (ev: Event) => {
       if (!(ev instanceof CustomEvent)) return;
@@ -65,8 +76,20 @@ export function useDrag({ onDragMove }: { onDragMove: UseDragMoveCallback }) {
     },
     [onDragMove],
   );
+
+  const handleDragEnd = useCallback(
+    (ev: Event) => {
+      if (!(ev instanceof CustomEvent)) return;
+      onDragEnd?.();
+    },
+    [onDragEnd],
+  );
   useEffect(() => {
     document.addEventListener("usedragmove", handleDragMove);
-    return () => document.removeEventListener("usedragmove", handleDragMove);
-  }, [handleDragMove, onDragMove]);
+    document.addEventListener("usedragend", handleDragEnd);
+    return () => {
+      document.removeEventListener("usedragmove", handleDragMove);
+      document.removeEventListener("usedragend", handleDragEnd);
+    };
+  }, [handleDragEnd, handleDragMove, onDragMove]);
 }

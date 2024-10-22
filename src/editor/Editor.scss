@@ -19,10 +19,6 @@
     transform-box: fill-box;
     transform-origin: center;
     fill: var(--color-primary);
-
-    &--clickable {
-      cursor: pointer;
-    }
   }
 
   &__scale_node {
@@ -37,4 +33,25 @@
       cursor: nwse-resize;
     }
   }
+
+  &__node-skeleton {
+    fill: rgb(from var(--color-secondary) r g b / 30%);
+  }
+
+  &[data-tool="move"] {
+    .editor__node {
+      &--clickable {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &[data-tool="add-node"] {
+      cursor: cell;
+
+      .editor__node {
+        pointer-events: none;
+      }
+    }
+
 }
