@@ -18,11 +18,11 @@
   &__node {
     transform-box: fill-box;
     transform-origin: center;
-    fill: var(--color-primary);
+    fill: var(--color-primary-100);
   }
 
   &__scale_node {
-    fill: var(--color-secondary);
+    fill: var(--color-secondary-100);
     stroke: none;
 
     &[data-dir="ne"], &[data-dir="sw"] {
@@ -35,7 +35,7 @@
   }
 
   &__node-skeleton {
-    fill: rgb(from var(--color-secondary) r g b / 30%);
+    fill: rgb(from var(--color-secondary-100) r g b / 30%);
   }
 
   &[data-tool="move"] {

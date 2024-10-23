@@ -3,19 +3,30 @@
   top: 100%;
   left: 50%;
   transform: translateY(calc(-100% - 1rem)) translateX(-50%);
-  padding: 1rem;
-  background-color: lch(from var(--color-background) calc(l + 6) c h);
+  padding: var(--spacing-m) var(--spacing-l);
+  background-color: var(--color-grayscale-500);
   display: flex;
   column-gap: 1rem;
+  border-radius: var(--spacing-l);
 
   &__button {
-    width: 4rem;
-    height: 4rem;
-    background-color: lch(from var(--color-background) calc(l + 10) c h);
+    font-size: 1rem;
+    color: unset;
+    width: 4em;
+    height: 4em;
+    background-color: var(--color-grayscale-500);
     cursor: pointer;
+    border: 2px solid var(--color-grayscale-600);
+    border-radius: var(--spacing-m);
 
     &--selected {
-      background-color: var(--color-primary);
+      border: none;
+      background-color: var(--color-primary-100);
     }
+  }
+
+  &__button-icon {
+    width: calc(1em * 1.5);
+    height: calc(1em * 1.5);
   }
 }

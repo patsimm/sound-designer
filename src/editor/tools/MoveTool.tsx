@@ -1,10 +1,10 @@
-import { useDrag, UseDragMoveCallback } from "../use-drag.hook.ts";
 import { ENTITY_NODE, isElementOfEntityType } from "../entities.ts";
 import { useAppStore } from "../../App.store.ts";
 import NodeSelection, {
   SelectionAnchorMoveEventHandler,
 } from "../NodeSelection.tsx";
 import { horizontalSign, verticalSign } from "../anchor-direction.ts";
+import { useDrag, UseDragMoveCallback } from "../drag.hook.tsx";
 
 function MoveTool() {
   const move = useAppStore((state) => state.move);

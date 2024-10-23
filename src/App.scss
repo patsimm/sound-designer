@@ -1,8 +1,29 @@
 :root {
-  --color-primary: #0a76f4;
-  --color-secondary: #f43497;
-  --color-background: #191919;
-  --color-foreground: #f4f4f4;
+  --color-primary-100: hsla(224, 88%, 55%, 1);
+  --color-primary-200: hsla(233, 88%, 55%, 1);
+  --color-primary-300: hsla(242, 88%, 55%, 1);
+
+  --color-secondary-100: hsla(330, 90%, 62%, 1);
+
+  --color-tertiary-100: hsla(40, 90%, 62%, 1);
+
+  --color-grayscale-600: hsla(0, 0%, 9%, 1);
+  --color-grayscale-500: hsla(0, 0%, 12%, 1);
+  --color-grayscale-400: hsla(0, 0%, 20%, 1);
+  --color-grayscale-300: hsla(0, 0%, 60%, 1);
+  --color-grayscale-200: hsla(0, 0%, 80%, 1);
+  --color-grayscale-100: hsla(0, 0%, 100%, 1);
+
+  --color-background: var(--color-grayscale-600);
+  --color-foreground: var(--color-grayscale-100);
+
+  --spacing-xs: 0.25rem;
+  --spacing-s: 0.5rem;
+  --spacing-m: 1rem;
+  --spacing-l: 1.5rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 6rem;
+  --spacing-3xl: 9rem;
 }
 
 body {
@@ -10,25 +31,44 @@ body {
   background: var(--color-background);
 }
 
+.glow {
+  --button-hover-glow-displacement: 0.05em;
+  --button-hover-floating: 0.25em;
+
+  --glow-blur-factor: 1;
+  --glow-displacement: 0px;
+
+  box-shadow:
+          var(--glow-background, var(--color-primary-200))
+          calc(0em + var(--glow-displacement, 0px))
+          calc(0.25em + var(--glow-displacement, 0px))
+          calc(1em * var(--glow-blur-factor));
+}
+
+.button {
+  --button-background: var(--color-primary-200);
+  --glow-background: var(--button-background);
+  --hover-displacement: 0.05em;
+  padding: 0.5em 0.75em;
+  color: var(--color-foreground);
+  background-color: var(--button-background);
+  border: none;
+  border-radius: 0.5em;
+  cursor: pointer;
+
+
+  &:hover {
+    --glow-displacement: calc(0px - var(--hover-displacement));
+    --glow-blur-factor: 0.75;
+    color: var(--color-secondary-100);
+    transform: translate(var(--hover-displacement), var(--hover-displacement));
+  }
+}
+
 .start-button {
   display: block;
   margin: auto;
-  width: 10rem;
-  height: 6rem;
   font-size: 3rem;
-  color: var(--color-foreground);
-  background-color: var(--color-primary);
-  border: 2px solid var(--color-foreground);
-  border-radius: 0.5rem;
-  cursor: pointer;
-  box-shadow: var(--color-foreground) 0.5rem 0.5rem;
-
-  &:hover {
-    border-color: var(--color-secondary);
-    color: var(--color-secondary);
-    transform: translate(0.15rem, 0.15rem);
-    box-shadow: var(--color-foreground) 0.35rem 0.35rem;
-  }
 
   #root:has(&) {
     display: flex;

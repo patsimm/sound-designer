@@ -1,4 +1,3 @@
-import { useDrag, UseDragMoveCallback } from "./use-drag.hook.ts";
 import { useCallback } from "react";
 import SelectionAnchor, { SELECTION_ANCHOR_SIZE } from "./SelectionAnchor.tsx";
 import { AnchorDirection, isAnchorDirection } from "./anchor-direction.ts";
@@ -7,6 +6,7 @@ import {
   ENTITY_SELECTION_ANCHOR,
   isElementOfEntityType,
 } from "./entities.ts";
+import { useDrag, UseDragMoveCallback } from "./drag.hook.tsx";
 
 export type SelectionAnchorMoveEventHandler = (
   dir: AnchorDirection,

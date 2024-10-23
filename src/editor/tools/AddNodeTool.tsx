@@ -1,12 +1,12 @@
-import {
-  useDrag,
-  UseDragEndCallback,
-  UseDragMoveCallback,
-} from "../use-drag.hook.ts";
 import { useState } from "react";
 import { useAppStore } from "../../App.store.ts";
 import { ENTITY_NODE_SKELETON } from "../entities.ts";
 import classNames from "classnames";
+import {
+  useDrag,
+  UseDragEndCallback,
+  UseDragMoveCallback,
+} from "../drag.hook.tsx";
 
 type AddNodeToolProps = {
   onAdded: (nodeId: string) => void;

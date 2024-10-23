@@ -27,7 +27,10 @@ function App({ audioContext }: { audioContext: AudioContext }) {
       <Toolbar />
     </>
   ) : (
-    <button className={classNames("start-button")} onClick={start}>
+    <button
+      className={classNames("start-button", "button", "glow")}
+      onClick={start}
+    >
       start
     </button>
   );

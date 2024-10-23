@@ -6,6 +6,7 @@ import useResizeObserver from "@react-hook/resize-observer";
 import { TOOL_ADD_NODE, TOOL_MOVE } from "./tools/tools.ts";
 import MoveTool from "./tools/MoveTool.tsx";
 import AddNodeTool from "./tools/AddNodeTool.tsx";
+import { DragContextProvider } from "./DragContextProvider.tsx";
 
 function Editor() {
   const setCanvasSize = useAppStore((state) => state.setCanvasSize);
@@ -38,15 +39,17 @@ function Editor() {
 
   return (
     <div className={"editor"} data-tool={toolType} ref={ref}>
-      <svg className={"editor__content"} onPointerUp={handlePointerUp}>
-        {Object.entries(nodes).map(([id, config]) => (
-          <Rect key={id} selected={selectedNodeId === id} {...config} />
-        ))}
-        {toolType === TOOL_MOVE && <MoveTool />}
-        {toolType === TOOL_ADD_NODE && (
-          <AddNodeTool onAdded={handleNodeAdded} />
-        )}
-      </svg>
+      <DragContextProvider target={ref}>
+        <svg className={"editor__content"} onPointerUp={handlePointerUp}>
+          {Object.entries(nodes).map(([id, config]) => (
+            <Rect key={id} selected={selectedNodeId === id} {...config} />
+          ))}
+          {toolType === TOOL_MOVE && <MoveTool />}
+          {toolType === TOOL_ADD_NODE && (
+            <AddNodeTool onAdded={handleNodeAdded} />
+          )}
+        </svg>
+      </DragContextProvider>
     </div>
   );
 }
