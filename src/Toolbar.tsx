@@ -2,7 +2,7 @@ import classNames from "classnames";
 import "./Toolbar.scss";
 import { TOOL_ADD_NODE, TOOL_MOVE } from "./editor/tools/tools.ts";
 import { useAppStore } from "./App.store.ts";
-import EditSvg from "./assets/edit.svg?react";
+import HandSvg from "./assets/edit.svg?react";
 import SquareSvg from "./assets/square.svg?react";
 
 function Toolbar() {
@@ -18,7 +18,7 @@ function Toolbar() {
           glow: tool === TOOL_MOVE,
         })}
       >
-        <SquareSvg className={classNames("toolbar__button-icon")} />
+        <HandSvg className={classNames("toolbar__button-icon")} />
       </button>
       <button
         onClick={() => setTool(TOOL_ADD_NODE)}
@@ -28,7 +28,7 @@ function Toolbar() {
           glow: tool === TOOL_ADD_NODE,
         })}
       >
-        <EditSvg className={classNames("toolbar__button-icon")} />
+        <SquareSvg className={classNames("toolbar__button-icon")} />
       </button>
     </div>
   );
