@@ -1,9 +1,12 @@
-export function startLooping(updateInterval: number, callback: () => void) {
+export function startLooping(
+  updateIntervalInSeconds: number,
+  callback: () => void,
+) {
   const blob = new Blob(
     [
       /* javascript */ `
 			// the initial timeout time
-			let timeoutTime =  ${(updateInterval * 1000).toFixed(1)};
+			let timeoutTime =  ${(updateIntervalInSeconds * 1000).toFixed(1)};
 			// onmessage callback
             self.onmessage = function(msg){
               timeoutTime = parseInt(msg.data);
@@ -25,7 +28,7 @@ export function startLooping(updateInterval: number, callback: () => void) {
 
   worker.onmessage = callback;
 
-  return (updateInterval: number): void => {
-    worker.postMessage(updateInterval * 1000);
+  return (updateIntervalInSeconds: number): void => {
+    worker.postMessage(updateIntervalInSeconds * 1000);
   };
 }

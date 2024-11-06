@@ -1,6 +1,6 @@
 export function mapObjectValues<T, U>(
   obj: { [key: string]: T },
-  mapper: (val: T) => U,
+  mapper: (val: T | undefined) => U,
 ) {
   return Object.keys(obj).reduce(
     (prev, curr) => ({

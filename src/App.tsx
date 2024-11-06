@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Indicator } from "./Indicator.tsx";
 import classNames from "classnames";
 import Toolbar from "./Toolbar.tsx";
+import ContextBar from "./ContextBar.tsx";
 
 function App({ audioContext }: { audioContext: AudioContext }) {
   const [started, setStarted] = useState(false);
@@ -25,6 +26,7 @@ function App({ audioContext }: { audioContext: AudioContext }) {
       <Indicator />
       <Editor />
       <Toolbar />
+      <ContextBar />
     </>
   ) : (
     <button

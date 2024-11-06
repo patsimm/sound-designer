@@ -1,4 +1,4 @@
-import { useAppStore } from "../App.store.ts";
+import { EditorNodesState, useAppStore } from "../App.store.ts";
 import { posToTime } from "./bpm.ts";
 import { mapObjectValues } from "../helpers.ts";
 import { posToChordNotes, posToNote } from "./note.ts";
@@ -12,6 +12,7 @@ export type SoundNodeState = {
 };
 
 function computeSoundNodeState(node: EditorNode): SoundNodeState {
+  if (node === undefined) console.log(node);
   return {
     time: posToTime(node.x),
     note: posToNote(node.y + node.height),
@@ -20,19 +21,23 @@ function computeSoundNodeState(node: EditorNode): SoundNodeState {
   };
 }
 
-export function getSoundNodeStates() {
-  const state = useAppStore.getState();
-
-  return mapObjectValues(state.nodes, (node) => computeSoundNodeState(node));
+export function computeSoundNodeStates(
+  nodeStates: EditorNodesState,
+): Record<string, SoundNodeState | undefined> {
+  return mapObjectValues(
+    nodeStates,
+    (node) => node && computeSoundNodeState(node),
+  );
 }
 
 export function subscribeToNodeState(
   id: string,
-  cb: (soundNodeState: SoundNodeState) => void,
+  cb: (soundNodeState: SoundNodeState | undefined) => void,
 ) {
   useAppStore.subscribe((state, prevState) => {
     if (state.nodes[id] !== prevState.nodes[id]) {
-      cb(computeSoundNodeState(state.nodes[id]));
+      const nodeState = state.nodes[id];
+      cb(nodeState && computeSoundNodeState(nodeState));
     }
   });
 }

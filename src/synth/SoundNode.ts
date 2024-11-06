@@ -22,15 +22,23 @@ export class SoundNode {
     this.id = id;
     this.context = context;
 
-    this.gain = context.createGain();
+    this.gain = this.context.createGain();
     this.gain.gain.value = 0;
 
     this.oscillators = [];
 
-    this.gain.connect(context.destination);
+    this.gain.connect(this.context.destination);
 
     this.#state = state;
     this.setupState();
+  }
+
+  public dispose() {
+    this.gain.disconnect(this.context.destination);
+    this.oscillators.forEach((oscillator) => {
+      oscillator.stop();
+      oscillator.disconnect(this.gain);
+    });
   }
 
   private createOscillator() {
@@ -57,9 +65,9 @@ export class SoundNode {
       }
       oscillator.frequency.linearRampToValueAtTime(freq, startTime);
     });
-    this.gain.gain.setValueAtTime(0, startTime - 0.001);
+    this.gain.gain.setValueAtTime(0, Math.max(startTime - 0.001, 0));
     this.gain.gain.linearRampToValueAtTime(0.4, startTime + 0.001);
-    this.gain.gain.setValueAtTime(0.4, endTime - 0.001);
+    this.gain.gain.setValueAtTime(0.4, Math.max(endTime - 0.001, 0));
     this.gain.gain.linearRampToValueAtTime(0, endTime);
   }
 
@@ -74,6 +82,7 @@ export class SoundNode {
     if (this.oscillators.length > this.#state.chordNotes) {
       this.oscillators.slice(this.#state.chordNotes).forEach((oscillator) => {
         oscillator.stop();
+        oscillator.disconnect(this.gain);
       });
       this.oscillators = this.oscillators.slice(0, this.#state.chordNotes);
     }

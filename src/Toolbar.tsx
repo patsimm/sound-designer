@@ -15,13 +15,13 @@ function Toolbar() {
         title={"Move"}
         onClick={() => setTool(TOOL_MOVE)}
         selected={tool === TOOL_MOVE}
-        icon={<HandSvg className={classNames("toolbar__button-icon")} />}
+        icon={<HandSvg />}
       />
       <ToolbarButton
         title={"Add Rectangle"}
         onClick={() => setTool(TOOL_ADD_NODE)}
         selected={tool === TOOL_ADD_NODE}
-        icon={<SquareSvg className={classNames("toolbar__button-icon")} />}
+        icon={<SquareSvg />}
       />
     </div>
   );

@@ -22,7 +22,9 @@ function ToolbarButton({
       })}
       title={title}
     >
-      {icon}
+      <span aria-hidden={true} className={classNames("toolbar__button-icon")}>
+        {icon}
+      </span>
     </button>
   );
 }

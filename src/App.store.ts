@@ -4,13 +4,13 @@ import { EditorNode } from "./editor/entities.ts";
 import { TOOL_MOVE, ToolType } from "./editor/tools/tools.ts";
 import { v7 as uuid } from "uuid";
 
+export type EditorNodesState = Record<string, EditorNode>;
+
 export type State = {
   bpm: number;
-  size: readonly [number, number];
+  editorSize: readonly [number, number];
   minSizeNode: readonly [number, number];
-  nodes: {
-    [id: string]: EditorNode;
-  };
+  nodes: EditorNodesState;
   indicatorPos: number;
   selectedNodeId: string | null;
   tool: ToolType;
@@ -19,7 +19,7 @@ export type State = {
 type Actions = {
   move: (nodeId: string, movementX: number, movementY: number) => void;
   resize: (nodeId: string, x: number, y: number) => void;
-  setCanvasSize: (width: number, height: number) => void;
+  setEditorSize: (width: number, height: number) => void;
   setIndicatorPos: (pos: number) => void;
   setSelectedNodeId: (nodeId: string | null) => void;
   setTool: (tool: ToolType) => void;
@@ -29,6 +29,7 @@ type Actions = {
     width: number,
     height: number,
   ) => string | undefined;
+  removeNode: (nodeId: string) => void;
 };
 
 function lerp(v0: number, v1: number, t: number) {
@@ -45,7 +46,7 @@ const prepareScale =
 export const useAppStore = create<State & Actions>()(
   immer((set) => ({
     bpm: 160,
-    size: [400, 400],
+    editorSize: [400, 400],
     minSizeNode: [10, 10],
     nodes: {
       "1": { id: "1", x: 0, y: 200, width: 60, height: 20 },
@@ -66,10 +67,10 @@ export const useAppStore = create<State & Actions>()(
         state.nodes[nodeId].width += x;
         state.nodes[nodeId].height += y;
       }),
-    setCanvasSize: (width: number, height: number) =>
+    setEditorSize: (width: number, height: number) =>
       set((state: State) => {
-        const scaleX = prepareScale(0, state.size[0], 0, width);
-        const scaleY = prepareScale(0, state.size[1], 0, height);
+        const scaleX = prepareScale(0, state.editorSize[0], 0, width);
+        const scaleY = prepareScale(0, state.editorSize[1], 0, height);
         for (const id in state.nodes) {
           state.nodes[id] = {
             id,
@@ -84,7 +85,7 @@ export const useAppStore = create<State & Actions>()(
           scaleY(state.minSizeNode[1]),
         ];
         state.indicatorPos = scaleX(state.indicatorPos);
-        state.size = [width, height];
+        state.editorSize = [width, height];
       }),
     setIndicatorPos: (indicatorPos: number) =>
       set((state: State) => {
@@ -112,5 +113,9 @@ export const useAppStore = create<State & Actions>()(
       });
       return newId;
     },
+    removeNode: (nodeId: string) =>
+      set((state: State) => {
+        delete state.nodes[nodeId];
+      }),
   })),
 );

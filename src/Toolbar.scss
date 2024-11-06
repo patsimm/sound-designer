@@ -25,8 +25,12 @@
     }
   }
 
-  &__button-icon {
-    width: calc(1em * 1.5);
-    height: calc(1em * 1.5);
+  &__button-icon  {
+    display: block;
+
+    svg {
+      width: calc(1em * 1.5);
+      height: calc(1em * 1.5);
+    }
   }
 }

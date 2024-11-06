@@ -9,7 +9,7 @@ import AddNodeTool from "./tools/AddNodeTool.tsx";
 import { DragContextProvider } from "./DragContextProvider.tsx";
 
 function Editor() {
-  const setCanvasSize = useAppStore((state) => state.setCanvasSize);
+  const setEditorSize = useAppStore((state) => state.setEditorSize);
   const setSelectedNodeId = useAppStore((state) => state.setSelectedNodeId);
   const nodes = useAppStore((state) => state.nodes);
   const toolType = useAppStore((state) => state.tool);
@@ -29,7 +29,7 @@ function Editor() {
   useResizeObserver(ref, () => {
     const el = ref.current;
     if (!el) return;
-    setCanvasSize(el.clientWidth, el.clientHeight);
+    setEditorSize(el.clientWidth, el.clientHeight);
   });
 
   const handleNodeAdded = (nodeId: string) => {

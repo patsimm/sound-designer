@@ -5,15 +5,15 @@ export function calcLoopLength(bpm: number, measures: number = 4) {
 }
 
 export function posToTime(pos: number) {
-  const { size, bpm } = useAppStore.getState();
-  const width = size[0];
+  const { editorSize, bpm } = useAppStore.getState();
+  const width = editorSize[0];
   const loopLength = calcLoopLength(bpm);
   return (pos / width) * loopLength;
 }
 
 export function timeToPos(time: number) {
-  const { size, bpm } = useAppStore.getState();
-  const width = size[0];
+  const { editorSize, bpm } = useAppStore.getState();
+  const width = editorSize[0];
   const loopLength = calcLoopLength(bpm);
   return ((time % loopLength) / loopLength) * width;
 }

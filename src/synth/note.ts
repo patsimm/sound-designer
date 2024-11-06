@@ -7,8 +7,8 @@ const base = 0;
 const c4major = Scale.steps("C4 mixolydian");
 
 export function posToNote(pos: number) {
-  const { size } = useAppStore.getState();
-  const height = size[1];
+  const { editorSize } = useAppStore.getState();
+  const height = editorSize[1];
   const noteMidi =
     pos === 0
       ? base - 12
@@ -25,7 +25,7 @@ export function posToNote(pos: number) {
 }
 
 export function posToChordNotes(pos: number) {
-  const { size } = useAppStore.getState();
-  const height = size[1];
+  const { editorSize } = useAppStore.getState();
+  const height = editorSize[1];
   return Math.max(Math.floor((pos / height) * availableNotes), 1);
 }
