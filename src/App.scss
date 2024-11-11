@@ -7,18 +7,20 @@
 
   --color-tertiary-100: hsla(40, 90%, 62%, 1);
 
-  --color-grayscale-600: hsla(0, 0%, 9%, 1);
-  --color-grayscale-500: hsla(0, 0%, 12%, 1);
+  --color-grayscale-700: hsla(0, 0%, 9%, 1);
+  --color-grayscale-600: hsla(0, 0%, 12%, 1);
+  --color-grayscale-500: hsla(0, 0%, 13%, 1);
   --color-grayscale-400: hsla(0, 0%, 20%, 1);
   --color-grayscale-300: hsla(0, 0%, 60%, 1);
   --color-grayscale-200: hsla(0, 0%, 80%, 1);
   --color-grayscale-100: hsla(0, 0%, 100%, 1);
 
-  --color-background: var(--color-grayscale-600);
+  --color-background: var(--color-grayscale-700);
   --color-foreground: var(--color-grayscale-100);
 
   --spacing-xs: 0.25rem;
   --spacing-s: 0.5rem;
+  --spacing-sm: 0.75rem;
   --spacing-m: 1rem;
   --spacing-l: 1.5rem;
   --spacing-xl: 3rem;
@@ -29,48 +31,4 @@
 body {
   color: var(--color-foreground);
   background: var(--color-background);
-}
-
-.glow {
-  --button-hover-glow-displacement: 0.05em;
-  --button-hover-floating: 0.25em;
-
-  --glow-blur-factor: 1;
-  --glow-displacement: 0px;
-
-  box-shadow:
-          var(--glow-background, var(--color-primary-200))
-          calc(0em + var(--glow-displacement, 0px))
-          calc(0.25em + var(--glow-displacement, 0px))
-          calc(1em * var(--glow-blur-factor));
-}
-
-.button {
-  --button-background: var(--color-primary-200);
-  --glow-background: var(--button-background);
-  --hover-displacement: 0.05em;
-  padding: 0.5em 0.75em;
-  color: var(--color-foreground);
-  background-color: var(--button-background);
-  border: none;
-  border-radius: 0.5em;
-  cursor: pointer;
-
-
-  &:hover {
-    --glow-displacement: calc(0px - var(--hover-displacement));
-    --glow-blur-factor: 0.75;
-    color: var(--color-secondary-100);
-    transform: translate(var(--hover-displacement), var(--hover-displacement));
-  }
-}
-
-.start-button {
-  display: block;
-  margin: auto;
-  font-size: 3rem;
-
-  #root:has(&) {
-    display: flex;
-  }
 }

@@ -1,0 +1,19 @@
+@import "common";
+
+.playbar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: var(--spacing-m);
+  display: flex;
+  column-gap: var(--spacing-sm);
+  @include button-area;
+
+  & > &__play-button--active, & > &__play-button:hover {
+    color: var(--color-tertiary-100);
+  }
+
+  & > &__stop-button:hover {
+    color: var(--color-primary-100);
+  }
+}

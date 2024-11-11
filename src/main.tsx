@@ -13,7 +13,7 @@ audioContext
   .then(() =>
     createRoot(document.getElementById("root")!).render(
       <StrictMode>
-        <App audioContext={audioContext} />
+        <App player={player} />
       </StrictMode>,
     ),
   );

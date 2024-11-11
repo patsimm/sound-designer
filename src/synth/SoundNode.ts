@@ -10,15 +10,13 @@ export class SoundNode {
   gain: GainNode;
 
   #state: SoundNodeState;
-  get state() {
-    return this.#state;
-  }
-  set state(state: SoundNodeState) {
-    this.#state = state;
-    this.setupState();
-  }
 
-  constructor(id: string, state: SoundNodeState, context: AudioContext) {
+  constructor(
+    id: string,
+    state: SoundNodeState,
+    context: AudioContext,
+    offset: number,
+  ) {
     this.id = id;
     this.context = context;
 
@@ -30,7 +28,7 @@ export class SoundNode {
     this.gain.connect(this.context.destination);
 
     this.#state = state;
-    this.setupState();
+    this.setupState(offset);
   }
 
   public dispose() {
@@ -48,6 +46,11 @@ export class SoundNode {
 
     oscillator.connect(this.gain);
     return oscillator;
+  }
+
+  public updateState(state: SoundNodeState, offset: number) {
+    this.#state = state;
+    this.setupState(offset);
   }
 
   schedule(time: number) {
@@ -78,7 +81,13 @@ export class SoundNode {
     this.gain.gain.cancelScheduledValues(time);
   }
 
-  private setupState() {
+  public async stop() {
+    this.cancelScheduled(this.context.currentTime);
+    this.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + 0.001);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+
+  public setupState(offset: number) {
     if (this.oscillators.length > this.#state.chordNotes) {
       this.oscillators.slice(this.#state.chordNotes).forEach((oscillator) => {
         oscillator.stop();
@@ -93,15 +102,16 @@ export class SoundNode {
       }
     }
 
-    const currentBeatStart = beatStart(this.context.currentTime);
-    const nextBeatStart = beatEnd(this.context.currentTime);
+    const currentBeatStart = beatStart(this.context.currentTime) + offset;
+    const nextBeatStart = beatEnd(this.context.currentTime) + offset;
+
     this.cancelScheduled(currentBeatStart);
     this.schedule(currentBeatStart);
     this.schedule(nextBeatStart);
   }
 
-  loop() {
-    const nextBeatStart = beatEnd(this.context.currentTime);
+  loop(offset: number) {
+    const nextBeatStart = beatEnd(this.context.currentTime) + offset;
     this.cancelScheduled(nextBeatStart);
     this.schedule(nextBeatStart);
   }

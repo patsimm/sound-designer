@@ -1,0 +1,33 @@
+@mixin button-area-large {
+  padding: var(--spacing-m);
+  column-gap: var(--spacing-m);
+  background-color: var(--color-grayscale-600);
+  color: var(--color-foreground);
+  display: flex;
+  border-radius: 2rem;
+}
+
+@mixin button-area {
+  padding: var(--spacing-m);
+  column-gap: var(--spacing-sm);
+  background-color: var(--color-grayscale-600);
+  color: var(--color-foreground);
+  display: flex;
+  border-radius: 2rem;
+}
+
+@mixin glow-box($color: currentcolor, $displacement: 0px, $factor: 1) {
+  box-shadow:
+    color-mix(in srgb, $color 48%, transparent)
+    calc(0em + $displacement)
+    calc(0.25em + $displacement)
+    calc(0.75em * $factor);
+}
+
+@mixin glow-filter($color: currentcolor, $displacement: 0px, $factor: 1) {
+  filter: drop-shadow(
+    calc(0em + $displacement)
+    calc(0.25em + $displacement)
+    calc(0.75em * $factor)
+    color-mix(in srgb, $color 48%, transparent));
+}

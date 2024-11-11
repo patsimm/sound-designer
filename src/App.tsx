@@ -1,40 +1,33 @@
 import "./App.scss";
 import Editor from "./editor/Editor.tsx";
-import { useCallback, useEffect, useState } from "react";
 import { Indicator } from "./Indicator.tsx";
-import classNames from "classnames";
 import Toolbar from "./Toolbar.tsx";
 import ContextBar from "./ContextBar.tsx";
+import Playbar from "./Playbar.tsx";
+import { useCallback, useState } from "react";
+import Player from "./synth/Player.ts";
 
-function App({ audioContext }: { audioContext: AudioContext }) {
-  const [started, setStarted] = useState(false);
+function App({ player }: { player: Player }) {
+  const [started, setStarted] = useState(player.state == "playing");
 
   const start = useCallback(async () => {
     setStarted(true);
-    await audioContext.resume();
-  }, [audioContext]);
+    await player.play();
+  }, [player]);
 
-  useEffect(() => {
-    if (audioContext.state == "running") {
-      start();
-      return;
-    }
-  }, [audioContext, start]);
+  const stop = useCallback(async () => {
+    setStarted(false);
+    await player.stop();
+  }, [player]);
 
-  return started ? (
+  return (
     <>
       <Indicator />
       <Editor />
       <Toolbar />
       <ContextBar />
+      <Playbar isPlaying={started} onClickPlay={start} onClickStop={stop} />
     </>
-  ) : (
-    <button
-      className={classNames("start-button", "button", "glow")}
-      onClick={start}
-    >
-      start
-    </button>
   );
 }
 

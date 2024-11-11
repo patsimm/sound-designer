@@ -13,11 +13,38 @@ export default class Player {
   private readonly soundNodes: { [key: string]: SoundNode } = {};
   private readonly context: AudioContext;
 
+  #offset = 0;
+
+  #state: "playing" | "stopped" = "stopped";
+  public get state() {
+    return this.#state;
+  }
+
   public constructor(context: AudioContext) {
     this.context = context;
     this.integrateNodeStates(
       computeSoundNodeStates(useAppStore.getInitialState().nodes),
     );
+  }
+
+  public async play() {
+    await this.context.resume();
+    this.#state = "playing";
+  }
+
+  public async stop() {
+    await Promise.all(
+      Object.values(this.soundNodes).map(
+        async (soundNode) => await soundNode.stop(),
+      ),
+    );
+    await this.context.suspend();
+    this.#offset =
+      this.context.currentTime % calcLoopLength(useAppStore.getState().bpm);
+    Object.values(this.soundNodes).forEach((soundNode) => {
+      soundNode.setupState(this.#offset);
+    });
+    this.#state = "stopped";
   }
 
   private removeNode(nodeId: string) {
@@ -26,7 +53,12 @@ export default class Player {
   }
 
   private addNode(nodeId: string, nodeState: SoundNodeState) {
-    this.soundNodes[nodeId] = new SoundNode(nodeId, nodeState, this.context);
+    this.soundNodes[nodeId] = new SoundNode(
+      nodeId,
+      nodeState,
+      this.context,
+      this.#offset,
+    );
     subscribeToNodeState(
       nodeId,
       debounce((nodeState) => {
@@ -34,7 +66,7 @@ export default class Player {
           this.removeNode(nodeId);
           return;
         }
-        this.soundNodes[nodeId].state = nodeState;
+        this.soundNodes[nodeId].updateState(nodeState, this.#offset);
       }),
     );
   }
@@ -47,7 +79,7 @@ export default class Player {
       if (!Object.keys(this.soundNodes).includes(id)) {
         this.addNode(id, nodeState);
       }
-      this.soundNodes[id].loop();
+      this.soundNodes[id].loop(this.#offset);
     }
 
     Object.keys(this.soundNodes).forEach((soundNodeKey) => {
@@ -63,7 +95,7 @@ export default class Player {
   }
 
   private updateFactor() {
-    const pos = timeToPos(this.context.currentTime);
+    const pos = timeToPos(this.context.currentTime - this.#offset);
     useAppStore.getState().setIndicatorPos(pos);
   }
 

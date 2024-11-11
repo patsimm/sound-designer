@@ -1,36 +1,10 @@
+@import "common";
+
 .toolbar {
   position: absolute;
-  top: 100%;
+  bottom: 0;
   left: 50%;
-  transform: translateY(calc(-100% - 1rem)) translateX(-50%);
-  padding: var(--spacing-m) var(--spacing-l);
-  background-color: var(--color-grayscale-500);
-  display: flex;
-  column-gap: 1rem;
-  border-radius: var(--spacing-l);
-
-  &__button {
-    font-size: 1rem;
-    color: unset;
-    width: 4em;
-    height: 4em;
-    background-color: var(--color-grayscale-500);
-    cursor: pointer;
-    border: 2px solid var(--color-grayscale-600);
-    border-radius: var(--spacing-m);
-
-    &--selected {
-      border: none;
-      background-color: var(--color-primary-100);
-    }
-  }
-
-  &__button-icon  {
-    display: block;
-
-    svg {
-      width: calc(1em * 1.5);
-      height: calc(1em * 1.5);
-    }
-  }
+  margin: var(--spacing-m);
+  transform: translateX(-50%);
+  @include button-area;
 }
