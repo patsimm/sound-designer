@@ -7,16 +7,26 @@
   font-size: 1rem;
   width: 4em;
   height: 4em;
-  background-color: var(--color-grayscale-600);
   border: none;
   border-radius: var(--spacing-m);
   cursor: pointer;
   color: inherit;
+  background-color: transparent;
 
   &--selected {
+    position: relative;
     border: none;
     background-color: var(--color-primary-100);
     @include glow-box(var(--color-primary-100), 0px, 1.5);
+  }
+
+  &:hover:not(&--selected) {
+    position: relative;
+    @include pseudo-background {
+      backdrop-filter: blur(5rem);
+      background-color: rgba(from white r g b / 4%);
+      border-radius: var(--spacing-m);
+    }
   }
 
   &__icon {

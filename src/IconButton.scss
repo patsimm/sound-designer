@@ -7,11 +7,11 @@
   font-size: 1rem;
   width: 3em;
   height: 3em;
-  background-color: var(--color-grayscale-600);
   border: none;
   border-radius: var(--spacing-m);
   cursor: pointer;
   color: inherit;
+  background-color: transparent;
 
   &__icon-hover {
     display: none;

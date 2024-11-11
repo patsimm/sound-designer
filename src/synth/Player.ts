@@ -20,8 +20,9 @@ export default class Player {
     return this.#state;
   }
 
-  public constructor(context: AudioContext) {
-    this.context = context;
+  public constructor() {
+    this.context = new AudioContext();
+    this.context.suspend();
     this.integrateNodeStates(
       computeSoundNodeStates(useAppStore.getInitialState().nodes),
     );

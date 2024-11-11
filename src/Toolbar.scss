@@ -2,9 +2,23 @@
 
 .toolbar {
   position: absolute;
+  display: flex;
+  column-gap: var(--spacing-sm);
   bottom: 0;
   left: 50%;
   margin: var(--spacing-m);
-  transform: translateX(-50%);
+  background-color: transparent;
+  pointer-events: auto;
   @include button-area;
+
+  &__container {
+    left: 0;
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    display: flex;
+    align-content: center;
+    width: 100%;
+    height: 100%;
+  }
 }

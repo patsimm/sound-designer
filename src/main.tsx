@@ -4,16 +4,12 @@ import App from "./App.tsx";
 import "./index.css";
 import Player from "./synth/Player.ts";
 
-const audioContext = new AudioContext();
-const player = new Player(audioContext);
+const player = new Player();
 
-audioContext
-  .suspend()
-  .then(() => player.start())
-  .then(() =>
-    createRoot(document.getElementById("root")!).render(
-      <StrictMode>
-        <App player={player} />
-      </StrictMode>,
-    ),
-  );
+player.start();
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App player={player} />
+  </StrictMode>,
+);

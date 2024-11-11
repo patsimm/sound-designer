@@ -1,19 +1,29 @@
-@mixin button-area-large {
-  padding: var(--spacing-m);
-  column-gap: var(--spacing-m);
-  background-color: var(--color-grayscale-600);
-  color: var(--color-foreground);
-  display: flex;
-  border-radius: 2rem;
+@mixin pseudo-background {
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    @content
+  }
+
+  &>* {
+    z-index: 2;
+  }
 }
 
 @mixin button-area {
   padding: var(--spacing-m);
-  column-gap: var(--spacing-sm);
-  background-color: var(--color-grayscale-600);
   color: var(--color-foreground);
-  display: flex;
-  border-radius: 2rem;
+  @include pseudo-background {
+    backdrop-filter: blur(5rem);
+    background-color: rgba(from var(--color-grayscale-500) r g b / 50%);
+    border-radius: 2rem;
+  }
 }
 
 @mixin glow-box($color: currentcolor, $displacement: 0px, $factor: 1) {
