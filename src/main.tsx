@@ -5,7 +5,6 @@ import "./index.css";
 import Player from "./synth/Player.ts";
 
 const player = new Player();
-
 player.start();
 
 createRoot(document.getElementById("root")!).render(

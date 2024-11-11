@@ -21,6 +21,12 @@ export default class Player {
   }
 
   public constructor() {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    if ((navigator as any).audioSession) {
+      (navigator as any).audioSession.type = "playback";
+    }
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+
     this.context = new AudioContext();
     this.context.suspend();
     this.integrateNodeStates(
