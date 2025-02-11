@@ -5,7 +5,12 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { UseDragMoveDetail } from "./drag.hook.tsx";
+import {
+  UseDragEndCallback,
+  UseDragMoveCallback,
+  UseDragMoveDetail,
+  UseDragStartCallback,
+} from "./drag.hook.tsx";
 import { dragContext } from "./drag.context.tsx";
 
 export type DragContextProviderProps = {
@@ -14,83 +19,97 @@ export type DragContextProviderProps = {
 
 export function DragContextProvider({
   children,
-  target,
 }: PropsWithChildren<DragContextProviderProps>) {
   const lastEventRef = useRef<PointerEvent | null>(null);
-  const draggedElementRef = useRef<EventTarget | null>(null);
-  const preventDefaultMouseUpRef = useRef<boolean>(false);
-
-  const handlePointerDown = (ev: PointerEvent) => {
-    lastEventRef.current = ev;
-    draggedElementRef.current = ev.target;
-  };
-
-  const handlePointerUp = useCallback(
-    (ev: PointerEvent) => {
-      if (draggedElementRef.current != null) {
-        const customEvent = new CustomEvent<UseDragMoveDetail>("usedragend");
-        target.current?.dispatchEvent(customEvent);
-      }
-      lastEventRef.current = null;
-      draggedElementRef.current = null;
-      if (preventDefaultMouseUpRef.current) {
-        ev.preventDefault();
-        ev.stopImmediatePropagation();
-        preventDefaultMouseUpRef.current = false;
-      }
-    },
-    [target],
+  const draggedElementRef = useRef<(Element & GlobalEventHandlers) | null>(
+    null,
   );
+  const useDragMoveCbRef = useRef<UseDragMoveCallback | null>(null);
+  const useDragEndCbRef = useRef<UseDragEndCallback | null>(null);
+  const useDragStartCbRef = useRef<UseDragStartCallback | null>(null);
 
-  const handlePointerMove = useCallback(
-    (ev: PointerEvent) => {
-      if (
-        lastEventRef.current?.pointerId !== ev.pointerId ||
-        draggedElementRef.current === null
-      ) {
-        draggedElementRef.current = null;
-        return;
-      }
+  const movingRef = useRef(false);
 
-      const customEvent = new CustomEvent<UseDragMoveDetail>("usedragmove", {
-        detail: {
-          target: draggedElementRef.current,
-          x: ev.clientX - lastEventRef.current.clientX,
-          y: ev.clientY - lastEventRef.current.clientY,
-          pointerX: ev.clientX,
-          pointerY: ev.clientY,
-        },
-        cancelable: true,
-      });
-      if (!target.current?.dispatchEvent(customEvent)) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        preventDefaultMouseUpRef.current = true;
-      }
+  const handlePointerUp = useRef((ev: PointerEvent) => {
+    const endCallback = useDragEndCbRef.current;
+    if (movingRef.current) {
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      endCallback?.();
+    }
+
+    document.removeEventListener("pointermove", handlePointerMove.current);
+    lastEventRef.current = null;
+    draggedElementRef.current = null;
+    useDragEndCbRef.current = null;
+    useDragMoveCbRef.current = null;
+    useDragStartCbRef.current = null;
+    movingRef.current = false;
+  });
+
+  const handlePointerMove = useRef((ev: PointerEvent) => {
+    if (
+      lastEventRef.current?.pointerId !== ev.pointerId ||
+      draggedElementRef.current === null
+    ) {
+      draggedElementRef.current = null;
+      return;
+    }
+
+    const detail: UseDragMoveDetail = {
+      target: draggedElementRef.current,
+      x: ev.clientX - lastEventRef.current.clientX,
+      y: ev.clientY - lastEventRef.current.clientY,
+      pointerX: ev.clientX,
+      pointerY: ev.clientY,
+    };
+
+    if (!movingRef.current) {
+      movingRef.current = true;
+      useDragStartCbRef.current?.(detail);
+    }
+
+    if (!lastEventRef.current) return;
+    useDragMoveCbRef.current?.(detail);
+    lastEventRef.current = ev;
+  });
+
+  const handleInitDrag = useCallback(
+    (
+      ev: PointerEvent,
+      el: (Element & GlobalEventHandlers) | null,
+      moveCallback: UseDragMoveCallback,
+      startCallback?: UseDragStartCallback,
+      endCallback?: UseDragEndCallback,
+    ) => {
       lastEventRef.current = ev;
+      draggedElementRef.current = el;
+      useDragMoveCbRef.current = moveCallback;
+      useDragStartCbRef.current = startCallback ?? null;
+      useDragEndCbRef.current = endCallback ?? null;
+      document.addEventListener("pointermove", handlePointerMove.current);
     },
-    [target],
+    [],
   );
 
   useEffect(() => {
-    const targetElement = target.current;
-    if (!targetElement) return;
-    targetElement.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("pointerup", handlePointerUp, {
+    const onPointerUp = handlePointerUp.current;
+    document.addEventListener("pointerup", onPointerUp, {
       capture: true,
     });
-    document.addEventListener("pointermove", handlePointerMove);
     return () => {
-      targetElement.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("pointerup", handlePointerUp, {
+      document.removeEventListener("pointerup", onPointerUp, {
         capture: true,
       });
-      document.removeEventListener("pointermove", handlePointerMove);
     };
-  }, [handlePointerMove, handlePointerUp, target]);
+  }, [handlePointerUp]);
 
   return (
-    <dragContext.Provider value={{ target: target }}>
+    <dragContext.Provider
+      value={{
+        initDrag: handleInitDrag,
+      }}
+    >
       {children}
     </dragContext.Provider>
   );

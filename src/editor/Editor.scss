@@ -5,6 +5,8 @@
   height: 100%;
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
+  position: relative;
 
   &__content {
     width: 100%;
@@ -13,12 +15,23 @@
     margin: 0;
     box-sizing: border-box;
     background: var(--color-background);
+    overflow: visible;
   }
 
   &__node {
     transform-box: fill-box;
     transform-origin: center;
     fill: var(--color-primary-100);
+  }
+
+  &__grid {
+    circle {
+      fill: var(--color-grayscale-500);
+
+      &[data-highlight="true"] {
+        fill: var(--color-grayscale-400);
+      }
+    }
   }
 
   &__scale_node {

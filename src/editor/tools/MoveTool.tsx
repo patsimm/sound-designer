@@ -1,35 +1,19 @@
-import { ENTITY_NODE, isElementOfEntityType } from "../entities.ts";
-import { useAppStore } from "../../App.store.ts";
+import { selectGrid, useAppStore } from "../../App.store.ts";
 import NodeSelection, {
   SelectionAnchorMoveEventHandler,
 } from "../NodeSelection.tsx";
 import { horizontalSign, verticalSign } from "../anchor-direction.ts";
-import { useDrag, UseDragMoveCallback } from "../drag.hook.tsx";
+import { useShallow } from "zustand/react/shallow";
 
 function MoveTool() {
   const move = useAppStore((state) => state.move);
   const resize = useAppStore((state) => state.resize);
   const minSizeRect = useAppStore((state) => state.minSizeNode);
-
-  const handleDragMove: UseDragMoveCallback = ({ target, x, y }) => {
-    if (!(target instanceof SVGElement)) return false;
-    if (!isElementOfEntityType(target, ENTITY_NODE)) return false;
-    const draggedNodeId = target.getAttribute("data-id");
-    if (draggedNodeId == null) return false;
-
-    move(draggedNodeId, x, y);
-    setSelectedNodeId(draggedNodeId);
-    return true;
-  };
-
-  useDrag({
-    onDragMove: handleDragMove,
-  });
+  const grid = useAppStore(useShallow(selectGrid));
 
   const selectedNode = useAppStore((state) =>
     state.selectedNodeId !== null ? state.nodes[state.selectedNodeId] : null,
   );
-  const setSelectedNodeId = useAppStore((state) => state.setSelectedNodeId);
 
   const handleSelectionAnchorMove: SelectionAnchorMoveEventHandler = (
     dir,
@@ -55,6 +39,7 @@ function MoveTool() {
 
   return selectedNode ? (
     <NodeSelection
+      grid={grid}
       node={selectedNode}
       onSelectionAnchorMove={handleSelectionAnchorMove}
     />

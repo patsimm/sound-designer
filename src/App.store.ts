@@ -46,13 +46,13 @@ const prepareScale =
 export const useAppStore = create<State & Actions>()(
   immer((set) => ({
     bpm: 160,
-    editorSize: [400, 400],
-    minSizeNode: [10, 10],
+    editorSize: [32, 24],
+    minSizeNode: [1, 1],
     nodes: {
-      "1": { id: "1", x: 0, y: 200, width: 60, height: 20 },
-      "2": { id: "2", x: 100, y: 100, width: 60, height: 20 },
-      "3": { id: "3", x: 200, y: 160, width: 60, height: 60 },
-      "4": { id: "4", x: 300, y: 300, width: 60, height: 20 },
+      "1": { id: "1", x: 0, y: 12, width: 4, height: 1 },
+      "2": { id: "2", x: 8, y: 6, width: 4, height: 1 },
+      "3": { id: "3", x: 16, y: 10, width: 4, height: 3 },
+      "4": { id: "4", x: 24, y: 18, width: 4, height: 1 },
     },
     indicatorPos: 0,
     selectedNodeId: null,
@@ -119,3 +119,12 @@ export const useAppStore = create<State & Actions>()(
       }),
   })),
 );
+
+export const selectGridSize = (_state: State) => [32, 24];
+export const selectGrid = (state: State) => {
+  const gridSize = selectGridSize(state);
+  return [
+    state.editorSize[0] / gridSize[0],
+    state.editorSize[1] / gridSize[1],
+  ] as const;
+};

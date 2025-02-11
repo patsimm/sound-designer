@@ -1,11 +1,11 @@
 import "./App.scss";
 import Editor from "./editor/Editor.tsx";
-import { Indicator } from "./Indicator.tsx";
 import Toolbar from "./Toolbar.tsx";
 import ContextBar from "./ContextBar.tsx";
 import Playbar from "./Playbar.tsx";
 import { useCallback, useState } from "react";
 import Player from "./synth/Player.ts";
+import classNames from "classnames";
 
 function App({ player }: { player: Player }) {
   const [started, setStarted] = useState(player.state == "playing");
@@ -21,13 +21,12 @@ function App({ player }: { player: Player }) {
   }, [player]);
 
   return (
-    <>
-      <Indicator />
+    <div className={classNames("app__main")}>
       <Editor />
       <Toolbar />
       <ContextBar />
       <Playbar isPlaying={started} onClickPlay={start} onClickStop={stop} />
-    </>
+    </div>
   );
 }
 
