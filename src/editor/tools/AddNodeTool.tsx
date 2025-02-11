@@ -1,5 +1,5 @@
 import { RefObject, useCallback, useMemo, useState } from "react";
-import { useAppStore } from "../../App.store.ts";
+import { selectGrid, useAppStore } from "../../App.store.ts";
 import { ENTITY_NODE_SKELETON } from "../entities.ts";
 import classNames from "classnames";
 import {
@@ -7,6 +7,8 @@ import {
   UseDragEndCallback,
   UseDragMoveCallback,
 } from "../drag.hook.tsx";
+import { usePointerPos } from "../pointer.hook.tsx";
+import { useShallow } from "zustand/react/shallow";
 
 type AddNodeToolProps = {
   onAdded: (nodeId: string) => void;
@@ -15,40 +17,78 @@ type AddNodeToolProps = {
 
 function AddNodeTool({ onAdded, editorRef }: AddNodeToolProps) {
   const [anchor, setAnchor] = useState<[number, number] | null>(null);
-  const [mouse, setMouse] = useState<[number, number] | null>(null);
+  const pointerPos = usePointerPos();
   const addRect = useAppStore((state) => state.addRect);
+  const grid = useAppStore(useShallow(selectGrid));
 
-  const rect = useMemo(
-    () =>
-      anchor &&
-      mouse && {
-        x: Math.min(anchor[0], mouse[0]),
-        y: Math.min(anchor[1], mouse[1]),
-        width: Math.abs(anchor[0] - mouse[0]),
-        height: Math.abs(anchor[1] - mouse[1]),
-      },
-    [anchor, mouse],
+  const [pointerRectX, pointerRectY] = useMemo(
+    () => [
+      pointerPos && Math.trunc(pointerPos[0] / grid[0]) * grid[0],
+      pointerPos && Math.trunc(pointerPos[1] / grid[1]) * grid[1],
+    ],
+    [grid, pointerPos],
   );
+
+  const [anchorRectX, anchorRectY] = useMemo(
+    () => [
+      anchor && Math.trunc(anchor[0] / grid[0]) * grid[0],
+      anchor && Math.trunc(anchor[1] / grid[1]) * grid[1],
+    ],
+    [anchor, grid],
+  );
+
+  const [growthX, growthY] = useMemo(() => {
+    if (anchor === null || pointerPos === null) return [null, null];
+    return [
+      Math.trunc((anchor[0] - pointerPos[0]) / grid[0]) * grid[0],
+      Math.trunc((anchor[1] - pointerPos[1]) / grid[1]) * grid[1],
+    ];
+  }, [anchor, grid, pointerPos]);
+
+  const rect = useMemo(() => {
+    if (
+      anchorRectX === null ||
+      anchorRectY === null ||
+      pointerRectX === null ||
+      pointerRectY === null ||
+      anchor === null ||
+      growthX === null ||
+      growthY === null
+    )
+      return null;
+
+    const width = Math.abs(growthX) + grid[0];
+    const height = Math.abs(growthY) + grid[1];
+
+    return {
+      x: growthX < 0 ? anchorRectX : anchorRectX - growthX,
+      y: growthY < 0 ? anchorRectY : anchorRectY - growthY,
+      width,
+      height,
+    };
+  }, [
+    anchor,
+    anchorRectX,
+    anchorRectY,
+    grid,
+    growthX,
+    growthY,
+    pointerRectX,
+    pointerRectY,
+  ]);
 
   const handleDragMove: UseDragMoveCallback = useCallback(
     ({ x, y, pointerX, pointerY }) => {
-      console.log("handleDragMove");
       setAnchor((anchor) =>
         anchor === null ? [pointerX - x, pointerY - y] : anchor,
       );
-      setMouse((mouse) => {
-        if (mouse === null || anchor === null)
-          return [pointerX - x, pointerY - y];
-        return [mouse[0] + x, mouse[1] + y];
-      });
     },
-    [anchor],
+    [],
   );
 
   const handleDragEnd: UseDragEndCallback = useCallback(() => {
     if (rect == null) return;
     const added = addRect(rect.x, rect.y, rect.width, rect.height);
-    setMouse(null);
     setAnchor(null);
     if (added === undefined) return;
     onAdded(added);
@@ -59,17 +99,29 @@ function AddNodeTool({ onAdded, editorRef }: AddNodeToolProps) {
     onDragEnd: handleDragEnd,
     setNodeRef: editorRef,
   });
-  return rect ? (
-    <rect
-      className={classNames("editor__node-skeleton")}
-      data-type={ENTITY_NODE_SKELETON}
-      x={rect.x}
-      y={rect.y}
-      width={rect.width}
-      height={rect.height}
-    />
-  ) : (
-    <></>
+  return (
+    <>
+      {rect ? (
+        <rect
+          className={classNames("editor__node-skeleton")}
+          data-type={ENTITY_NODE_SKELETON}
+          x={rect.x}
+          y={rect.y}
+          width={rect.width}
+          height={rect.height}
+        />
+      ) : pointerRectX !== null && pointerRectY !== null ? (
+        <rect
+          className={classNames("editor__node-skeleton")}
+          x={pointerRectX}
+          y={pointerRectY}
+          width={grid[0]}
+          height={grid[1]}
+        />
+      ) : (
+        <></>
+      )}
+    </>
   );
 }
 

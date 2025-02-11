@@ -31,11 +31,10 @@ export function DragContextProvider({
   const movingRef = useRef(false);
 
   const handlePointerUp = useRef((ev: PointerEvent) => {
-    const endCallback = useDragEndCbRef.current;
     if (movingRef.current) {
       ev.preventDefault();
       ev.stopImmediatePropagation();
-      endCallback?.();
+      useDragEndCbRef.current?.();
     }
 
     document.removeEventListener("pointermove", handlePointerMove.current);
@@ -93,7 +92,7 @@ export function DragContextProvider({
   );
 
   useEffect(() => {
-    const onPointerUp = handlePointerUp.current;
+    const onPointerUp = (ev: PointerEvent) => handlePointerUp.current(ev);
     document.addEventListener("pointerup", onPointerUp, {
       capture: true,
     });
