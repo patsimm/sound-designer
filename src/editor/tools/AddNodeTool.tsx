@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useMemo, useState } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import { selectGrid, useAppStore } from "../../App.store.ts";
 import { ENTITY_NODE_SKELETON } from "../entities.ts";
 import classNames from "classnames";
@@ -94,11 +94,28 @@ function AddNodeTool({ onAdded, editorRef }: AddNodeToolProps) {
     onAdded(added);
   }, [addRect, onAdded, rect]);
 
+  const handleClick = useCallback(() => {
+    if (pointerRectX === null || pointerRectY === null) return;
+    const added = addRect(pointerRectX, pointerRectY, grid[0], grid[1]);
+    if (added === undefined) return;
+    onAdded(added);
+  }, [addRect, grid, onAdded, pointerRectX, pointerRectY]);
+
   useDrag({
     onDragMove: handleDragMove,
     onDragEnd: handleDragEnd,
     setNodeRef: editorRef,
   });
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor) return;
+    editor.addEventListener("click", handleClick);
+    return () => {
+      editor.removeEventListener("click", handleClick);
+    };
+  }, [editorRef, handleClick]);
+
   return (
     <>
       {rect ? (

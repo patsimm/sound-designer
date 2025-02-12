@@ -8,7 +8,7 @@ import { useShallow } from "zustand/react/shallow";
 function MoveTool() {
   const move = useAppStore((state) => state.move);
   const resize = useAppStore((state) => state.resize);
-  const minSizeRect = useAppStore((state) => state.minSizeNode);
+  const minSizeRect = useAppStore(useShallow(selectGrid));
   const grid = useAppStore(useShallow(selectGrid));
 
   const selectedNode = useAppStore((state) =>

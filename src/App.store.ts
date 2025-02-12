@@ -9,7 +9,7 @@ export type EditorNodesState = Record<string, EditorNode>;
 export type State = {
   bpm: number;
   editorSize: readonly [number, number];
-  minSizeNode: readonly [number, number];
+  gridSize: readonly [number, number];
   nodes: EditorNodesState;
   indicatorPos: number;
   selectedNodeId: string | null;
@@ -47,7 +47,7 @@ export const useAppStore = create<State & Actions>()(
   immer((set) => ({
     bpm: 160,
     editorSize: [32, 24],
-    minSizeNode: [1, 1],
+    gridSize: [32, 24],
     nodes: {
       "1": { id: "1", x: 0, y: 12, width: 4, height: 1 },
       "2": { id: "2", x: 8, y: 6, width: 4, height: 1 },
@@ -80,10 +80,6 @@ export const useAppStore = create<State & Actions>()(
             height: scaleY(state.nodes[id].height),
           };
         }
-        state.minSizeNode = [
-          scaleX(state.minSizeNode[0]),
-          scaleY(state.minSizeNode[1]),
-        ];
         state.indicatorPos = scaleX(state.indicatorPos);
         state.editorSize = [width, height];
       }),
@@ -102,7 +98,10 @@ export const useAppStore = create<State & Actions>()(
     addRect: (x: number, y: number, width: number, height: number) => {
       let newId: string | undefined;
       set((state: State) => {
-        if (width < state.minSizeNode[0] || height < state.minSizeNode[1]) {
+        if (
+          width < state.editorSize[0] / state.gridSize[0] ||
+          height < state.editorSize[1] / state.gridSize[1]
+        ) {
           return;
         }
         newId = uuid();
@@ -120,7 +119,7 @@ export const useAppStore = create<State & Actions>()(
   })),
 );
 
-export const selectGridSize = (_state: State) => [32, 24];
+export const selectGridSize = (state: State) => state.gridSize;
 export const selectGrid = (state: State) => {
   const gridSize = selectGridSize(state);
   return [
