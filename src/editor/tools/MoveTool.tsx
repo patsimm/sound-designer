@@ -1,9 +1,10 @@
+import { useShallow } from "zustand/react/shallow";
+
 import { selectGrid, useAppStore } from "../../App.store.ts";
+import { horizontalSign, verticalSign } from "../anchor-direction.ts";
 import NodeSelection, {
   SelectionAnchorMoveEventHandler,
 } from "../nodes/NodeSelection.tsx";
-import { horizontalSign, verticalSign } from "../anchor-direction.ts";
-import { useShallow } from "zustand/react/shallow";
 
 function MoveTool() {
   const move = useAppStore((state) => state.move);

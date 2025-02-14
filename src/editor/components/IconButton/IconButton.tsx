@@ -1,6 +1,7 @@
+import "./IconButton.scss";
+
 import classNames from "classnames";
 import { ReactNode } from "react";
-import "./IconButton.scss";
 
 type IconButtonProps = {
   onClick: () => void;

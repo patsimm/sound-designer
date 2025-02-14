@@ -1,9 +1,11 @@
-import classNames from "classnames";
 import "./Toolbar.scss";
-import { TOOL_ADD_NODE, TOOL_MOVE } from "../../tools/tools.ts";
+
+import classNames from "classnames";
+
 import { useAppStore } from "../../../App.store.ts";
-import SquareSvg from "../../../assets/square.svg?react";
 import HandSvg from "../../../assets/hand.svg?react";
+import SquareSvg from "../../../assets/square.svg?react";
+import { TOOL_ADD_NODE, TOOL_MOVE } from "../../tools/tools.ts";
 import ButtonSquare from "../ButtonSquare/ButtonSquare.tsx";
 
 function Toolbar() {

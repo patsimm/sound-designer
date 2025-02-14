@@ -1,4 +1,5 @@
 import * as Scale from "@tonaljs/scale";
+
 import { selectGrid, selectGridSize, useAppStore } from "../App.store.ts";
 
 const c4major = Scale.steps("C4 mixolydian");

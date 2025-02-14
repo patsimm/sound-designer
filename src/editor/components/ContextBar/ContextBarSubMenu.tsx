@@ -1,6 +1,7 @@
-import ContextBarButton from "./ContextBarButton.tsx";
 import classNames from "classnames";
 import React, { useId } from "react";
+
+import ContextBarButton from "./ContextBarButton.tsx";
 
 export type ContextBarSubMenuProps = {
   icon: React.ReactNode;

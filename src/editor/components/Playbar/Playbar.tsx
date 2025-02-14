@@ -1,9 +1,11 @@
 import "./Playbar.scss";
+
 import classNames from "classnames";
-import PlayOutlineSvg from "../../../assets/play-outline.svg?react";
-import StopOutlineSvg from "../../../assets/stop-outline.svg?react";
+
 import PlayFillSvg from "../../../assets/play-fill.svg?react";
+import PlayOutlineSvg from "../../../assets/play-outline.svg?react";
 import StopFillSvg from "../../../assets/stop-fill.svg?react";
+import StopOutlineSvg from "../../../assets/stop-outline.svg?react";
 import IconButton from "../IconButton/IconButton.tsx";
 
 export type PlayerControlBarProps = {

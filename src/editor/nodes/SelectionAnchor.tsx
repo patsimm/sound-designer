@@ -1,12 +1,13 @@
 import classNames from "classnames";
+import { createRef } from "react";
+
 import {
   AnchorDirection,
   horizontalSign,
   verticalSign,
 } from "../anchor-direction.ts";
-import { ENTITY_SELECTION_ANCHOR, entityTypeProps } from "../entities.ts";
 import { useDrag, UseDragMoveCallback } from "../drag.hook.tsx";
-import { createRef } from "react";
+import { ENTITY_SELECTION_ANCHOR, entityTypeProps } from "../entities.ts";
 
 export const SELECTION_ANCHOR_SIZE = 10;
 

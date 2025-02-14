@@ -1,7 +1,8 @@
 import classNames from "classnames";
-import { ENTITY_NODE, entityTypeProps } from "../entities.ts";
-import { useDrag, UseDragMoveCallback } from "../drag.hook.tsx";
 import { createRef, useRef } from "react";
+
+import { useDrag, UseDragMoveCallback } from "../drag.hook.tsx";
+import { ENTITY_NODE, entityTypeProps } from "../entities.ts";
 
 export function Rect({
   id,

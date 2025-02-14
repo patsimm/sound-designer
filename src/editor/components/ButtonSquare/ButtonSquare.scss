@@ -1,4 +1,4 @@
-@import "../../../common";
+@use "../../../common";
 
 .button-square {
   display: flex;
@@ -17,12 +17,12 @@
     position: relative;
     border: none;
     background-color: var(--color-primary-100);
-    @include glow-box(var(--color-primary-100), 0px, 1.5);
+    @include common.glow-box(var(--color-primary-100), 0px, 1.5);
   }
 
   &:hover:not(&--selected) {
     position: relative;
-    @include pseudo-background {
+    @include common.pseudo-background {
       backdrop-filter: blur(5rem);
       background-color: rgba(from white r g b / 4%);
       border-radius: var(--spacing-m);

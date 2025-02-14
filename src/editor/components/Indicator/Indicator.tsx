@@ -1,5 +1,7 @@
-import classNames from "classnames";
 import "./Indicator.scss";
+
+import classNames from "classnames";
+
 import { useAppStore } from "../../../App.store.ts";
 
 function Indicator() {

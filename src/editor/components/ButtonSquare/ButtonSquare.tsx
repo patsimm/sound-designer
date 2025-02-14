@@ -1,6 +1,7 @@
+import "./ButtonSquare.scss";
+
 import classNames from "classnames";
 import { ReactNode } from "react";
-import "./ButtonSquare.scss";
 
 type ButtonSquareProps = {
   onClick: () => void;

@@ -1,7 +1,8 @@
-import { SoundNodeState } from "./SoundNodeState.ts";
-import { beatEnd, beatStart } from "./bpm.ts";
 import * as Chord from "@tonaljs/chord";
 import * as Note from "@tonaljs/note";
+
+import { beatEnd, beatStart } from "./bpm.ts";
+import { SoundNodeState } from "./SoundNodeState.ts";
 
 export class SoundNode {
   id: string;

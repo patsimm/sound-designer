@@ -1,4 +1,5 @@
 import "./ColorChooser.scss";
+
 import classNames from "classnames";
 
 export type ColorChooserProps = {

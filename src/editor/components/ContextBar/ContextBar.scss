@@ -1,4 +1,4 @@
-@import "../../../common";
+@use "../../../common";
 
 $icon-size: 1.5rem;
 
@@ -9,7 +9,7 @@ $icon-size: 1.5rem;
   column-gap: var(--spacing-s);
   padding: var(--spacing-s);
 
-  @include bg-area {
+  @include common.bg-area {
     border-radius: var(--spacing-m);
   }
 
@@ -40,7 +40,7 @@ $icon-size: 1.5rem;
 
     &--expanded {
       background-color: var(--color-primary-100);
-      @include glow-filter;
+      @include common.glow-box(var(--color-primary-100), 0px, 1.5);
 
       .context-bar__color-circle {
         border: 1px solid var(--color-grayscale-200);
@@ -95,7 +95,7 @@ $icon-size: 1.5rem;
       display: block;
     }
 
-    @include bg-area {
+    @include common.bg-area {
       border-radius: var(--spacing-m);
     }
   }

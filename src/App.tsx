@@ -1,11 +1,13 @@
 import "./App.scss";
-import Editor from "./editor/Editor.tsx";
-import Toolbar from "./editor/components/Toolbar";
+
+import classNames from "classnames";
+import { useCallback, useState } from "react";
+
 import ContextBar from "./editor/components/ContextBar";
 import Playbar from "./editor/components/Playbar";
-import { useCallback, useState } from "react";
+import Toolbar from "./editor/components/Toolbar";
+import Editor from "./editor/Editor.tsx";
 import Player from "./synth/Player.ts";
-import classNames from "classnames";
 
 function App({ player }: { player: Player }) {
   const [started, setStarted] = useState(player.state == "playing");

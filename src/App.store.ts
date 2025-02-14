@@ -1,8 +1,9 @@
+import { v7 as uuid } from "uuid";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+
 import { EditorNode } from "./editor/entities.ts";
 import { TOOL_MOVE, ToolType } from "./editor/tools/tools.ts";
-import { v7 as uuid } from "uuid";
 
 export type EditorNodesState = Record<string, EditorNode>;
 

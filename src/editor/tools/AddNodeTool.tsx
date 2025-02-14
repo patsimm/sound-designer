@@ -1,14 +1,15 @@
-import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
-import { selectGrid, useAppStore } from "../../App.store.ts";
-import { ENTITY_NODE_SKELETON } from "../entities.ts";
 import classNames from "classnames";
+import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+
+import { selectGrid, useAppStore } from "../../App.store.ts";
 import {
   useDrag,
   UseDragEndCallback,
   UseDragMoveCallback,
 } from "../drag.hook.tsx";
+import { ENTITY_NODE_SKELETON } from "../entities.ts";
 import { usePointerPos } from "../pointer.hook.tsx";
-import { useShallow } from "zustand/react/shallow";
 
 type AddNodeToolProps = {
   onAdded: (nodeId: string) => void;
@@ -88,7 +89,13 @@ function AddNodeTool({ onAdded, editorRef }: AddNodeToolProps) {
 
   const handleDragEnd: UseDragEndCallback = useCallback(() => {
     if (rect == null) return;
-    const added = addRect(rect.x, rect.y, rect.width, rect.height);
+    const added = addRect(
+      rect.x,
+      rect.y,
+      rect.width,
+      rect.height,
+      "var(--color-primary-100)",
+    );
     setAnchor(null);
     if (added === undefined) return;
     onAdded(added);
@@ -96,7 +103,13 @@ function AddNodeTool({ onAdded, editorRef }: AddNodeToolProps) {
 
   const handleClick = useCallback(() => {
     if (pointerRectX === null || pointerRectY === null) return;
-    const added = addRect(pointerRectX, pointerRectY, grid[0], grid[1]);
+    const added = addRect(
+      pointerRectX,
+      pointerRectY,
+      grid[0],
+      grid[1],
+      "var(--color-primary-100)",
+    );
     if (added === undefined) return;
     onAdded(added);
   }, [addRect, grid, onAdded, pointerRectX, pointerRectY]);

@@ -1,10 +1,12 @@
-import classNames from "classnames";
 import "./ContextBar.scss";
+
+import classNames from "classnames";
+
 import { useAppStore } from "../../../App.store.ts";
 import EditSvg from "../../../assets/edit.svg?react";
+import ColorChooser from "../ColorChooser";
 import ContextBarButton from "./ContextBarButton.tsx";
 import ContextBarSubMenu from "./ContextBarSubMenu.tsx";
-import ColorChooser from "../ColorChooser";
 
 function ContextBar() {
   const selectedNode = useAppStore((state) =>

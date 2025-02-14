@@ -1,13 +1,13 @@
 import { useAppStore } from "../App.store.ts";
+import { debounce } from "../helpers.ts";
+import { calcLoopLength, timeToPos } from "./bpm.ts";
 import { startLooping } from "./Looper.ts";
 import { SoundNode } from "./SoundNode.ts";
-import { calcLoopLength, timeToPos } from "./bpm.ts";
 import {
   computeSoundNodeStates,
   SoundNodeState,
   subscribeToNodeState,
 } from "./SoundNodeState.ts";
-import { debounce } from "../helpers.ts";
 
 export default class Player {
   private readonly soundNodes: { [key: string]: SoundNode } = {};

@@ -1,4 +1,4 @@
-@import "../../../common";
+@use "../../../common";
 
 .toolbar {
   position: relative;
@@ -10,7 +10,7 @@
   padding: var(--spacing-m);
   color: var(--color-foreground);
 
-  @include bg-area {
+  @include common.bg-area {
     border-radius: 2rem;
   }
 

@@ -1,6 +1,7 @@
 import classNames from "classnames";
-import ArrowDownSvg from "../../../assets/arrow-down.svg?react";
 import React from "react";
+
+import ArrowDownSvg from "../../../assets/arrow-down.svg?react";
 
 export type ContextBarButtonProps = {
   label: string;
