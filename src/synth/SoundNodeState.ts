@@ -12,7 +12,6 @@ export type SoundNodeState = {
 };
 
 function computeSoundNodeState(node: EditorNode): SoundNodeState {
-  if (node === undefined) console.log(node);
   return {
     time: posToTime(node.x),
     note: posToNote(node.y + node.height),

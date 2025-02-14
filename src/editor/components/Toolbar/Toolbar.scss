@@ -1,4 +1,4 @@
-@import "common";
+@import "../../../common";
 
 .toolbar {
   position: relative;
@@ -7,7 +7,12 @@
   margin: var(--spacing-m);
   background-color: transparent;
   pointer-events: auto;
-  @include button-area;
+  padding: var(--spacing-m);
+  color: var(--color-foreground);
+
+  @include bg-area {
+    border-radius: 2rem;
+  }
 
   &__container {
     left: 0;

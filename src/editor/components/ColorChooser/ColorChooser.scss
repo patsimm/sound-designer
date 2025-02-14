@@ -1,0 +1,13 @@
+.color-chooser {
+  display: flex;
+  gap: var(--spacing-s);
+
+  &__color-button {
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    border-radius: 100%;
+  }
+
+}

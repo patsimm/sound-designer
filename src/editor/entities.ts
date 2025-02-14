@@ -29,6 +29,7 @@ export type Rect = {
   y: number;
   width: number;
   height: number;
+  color: string;
 };
 
 export type EditorNode = Rect;

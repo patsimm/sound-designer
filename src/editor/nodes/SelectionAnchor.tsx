@@ -3,9 +3,9 @@ import {
   AnchorDirection,
   horizontalSign,
   verticalSign,
-} from "./anchor-direction.ts";
-import { ENTITY_SELECTION_ANCHOR, entityTypeProps } from "./entities.ts";
-import { useDrag, UseDragMoveCallback } from "./drag.hook.tsx";
+} from "../anchor-direction.ts";
+import { ENTITY_SELECTION_ANCHOR, entityTypeProps } from "../entities.ts";
+import { useDrag, UseDragMoveCallback } from "../drag.hook.tsx";
 import { createRef } from "react";
 
 export const SELECTION_ANCHOR_SIZE = 10;
@@ -40,8 +40,6 @@ function SelectionAnchor({ x, y, dir, onMove, grid }: SelectionAnchorProps) {
 
       newX = Math.ceil((newX - grid[0] / 2) / grid[0]) * grid[0];
       newY = Math.ceil((newY - grid[1] / 2) / grid[1]) * grid[1];
-
-      console.log([newX, newY]);
 
       return [newX - shiftX, newY - shiftY];
     },

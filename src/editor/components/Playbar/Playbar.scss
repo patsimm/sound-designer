@@ -1,4 +1,4 @@
-@import "common";
+@import "../../../common";
 
 .playbar {
   position: absolute;
@@ -7,7 +7,12 @@
   margin: var(--spacing-m);
   display: flex;
   column-gap: var(--spacing-sm);
-  @include button-area;
+  padding: var(--spacing-m);
+  color: var(--color-foreground);
+
+  @include bg-area {
+    border-radius: 2rem;
+  }
 
   & > &__play-button--active, & > &__play-button:hover {
     color: var(--color-tertiary-100);

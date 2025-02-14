@@ -1,6 +1,6 @@
 import "./Editor.scss";
 import { PointerEventHandler, useRef } from "react";
-import { Rect } from "./Rect.tsx";
+import { Rect } from "./nodes/Rect.tsx";
 import { selectGrid, selectGridSize, useAppStore } from "../App.store.ts";
 import useResizeObserver from "@react-hook/resize-observer";
 import { TOOL_ADD_NODE, TOOL_MOVE } from "./tools/tools.ts";
@@ -9,7 +9,7 @@ import AddNodeTool from "./tools/AddNodeTool.tsx";
 import { DragContextProvider } from "./DragContextProvider.tsx";
 import { useShallow } from "zustand/react/shallow";
 import classNames from "classnames";
-import { Indicator } from "../Indicator.tsx";
+import Indicator from "./components/Indicator";
 
 function Editor() {
   const setEditorSize = useAppStore((state) => state.setEditorSize);

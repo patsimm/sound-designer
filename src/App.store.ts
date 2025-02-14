@@ -19,6 +19,7 @@ export type State = {
 type Actions = {
   move: (nodeId: string, movementX: number, movementY: number) => void;
   resize: (nodeId: string, x: number, y: number) => void;
+  changeColor: (nodeId: string, color: string) => void;
   setEditorSize: (width: number, height: number) => void;
   setIndicatorPos: (pos: number) => void;
   setSelectedNodeId: (nodeId: string | null) => void;
@@ -28,6 +29,7 @@ type Actions = {
     y: number,
     width: number,
     height: number,
+    color: string,
   ) => string | undefined;
   removeNode: (nodeId: string) => void;
 };
@@ -46,13 +48,20 @@ const prepareScale =
 export const useAppStore = create<State & Actions>()(
   immer((set) => ({
     bpm: 160,
-    editorSize: [32, 24],
-    gridSize: [32, 24],
+    editorSize: [32, 24] as const,
+    gridSize: [32, 24] as const,
     nodes: {
-      "1": { id: "1", x: 0, y: 12, width: 4, height: 1 },
-      "2": { id: "2", x: 8, y: 6, width: 4, height: 1 },
-      "3": { id: "3", x: 16, y: 10, width: 4, height: 3 },
-      "4": { id: "4", x: 24, y: 18, width: 4, height: 1 },
+      "1": {
+        id: "1",
+        x: 0,
+        y: 12,
+        width: 4,
+        height: 1,
+        color: "var(--color-secondary-100)",
+      },
+      "2": { id: "2", x: 8, y: 6, width: 4, height: 1, color: "#275DF1" },
+      "3": { id: "3", x: 16, y: 10, width: 4, height: 3, color: "#275DF1" },
+      "4": { id: "4", x: 24, y: 18, width: 4, height: 1, color: "#275DF1" },
     },
     indicatorPos: 0,
     selectedNodeId: null,
@@ -67,13 +76,17 @@ export const useAppStore = create<State & Actions>()(
         state.nodes[nodeId].width += x;
         state.nodes[nodeId].height += y;
       }),
+    changeColor: (nodeId: string, color: string) =>
+      set((state: State) => {
+        state.nodes[nodeId].color = color;
+      }),
     setEditorSize: (width: number, height: number) =>
       set((state: State) => {
         const scaleX = prepareScale(0, state.editorSize[0], 0, width);
         const scaleY = prepareScale(0, state.editorSize[1], 0, height);
         for (const id in state.nodes) {
           state.nodes[id] = {
-            id,
+            ...state.nodes[id],
             x: scaleX(state.nodes[id].x),
             y: scaleY(state.nodes[id].y),
             width: scaleX(state.nodes[id].width),
@@ -95,7 +108,13 @@ export const useAppStore = create<State & Actions>()(
       set((state: State) => {
         state.tool = tool;
       }),
-    addRect: (x: number, y: number, width: number, height: number) => {
+    addRect: (
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      color: string,
+    ) => {
       let newId: string | undefined;
       set((state: State) => {
         if (
@@ -107,7 +126,7 @@ export const useAppStore = create<State & Actions>()(
         newId = uuid();
         state.nodes = {
           ...state.nodes,
-          [newId]: { id: newId, x, y, width, height },
+          [newId]: { id: newId, x, y, width, height, color },
         };
       });
       return newId;

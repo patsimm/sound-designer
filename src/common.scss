@@ -12,17 +12,16 @@
   }
 
   &>* {
+    position: relative;
     z-index: 2;
   }
 }
 
-@mixin button-area {
-  padding: var(--spacing-m);
-  color: var(--color-foreground);
+@mixin bg-area {
   @include pseudo-background {
     backdrop-filter: blur(5rem);
-    background-color: rgba(from var(--color-grayscale-500) r g b / 50%);
-    border-radius: 2rem;
+    background-color: rgba(from var(--color-area) r g b / 50%);
+    @content
   }
 }
 

@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import { ENTITY_NODE, entityTypeProps } from "./entities.ts";
-import { useDrag, UseDragMoveCallback } from "./drag.hook.tsx";
+import { ENTITY_NODE, entityTypeProps } from "../entities.ts";
+import { useDrag, UseDragMoveCallback } from "../drag.hook.tsx";
 import { createRef, useRef } from "react";
 
 export function Rect({
@@ -9,6 +9,7 @@ export function Rect({
   y,
   width,
   height,
+  color,
   selected,
   onDragMove,
   grid,
@@ -18,6 +19,7 @@ export function Rect({
   y: number;
   width: number;
   height: number;
+  color: string;
   selected: boolean;
   onDragMove: UseDragMoveCallback;
   grid: readonly [number, number];
@@ -60,6 +62,7 @@ export function Rect({
       height={height}
       x={x}
       y={y}
+      fill={color}
       {...entityTypeProps(ENTITY_NODE)}
     ></rect>
   );

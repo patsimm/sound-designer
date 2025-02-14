@@ -1,10 +1,10 @@
 import classNames from "classnames";
 import "./Toolbar.scss";
-import { TOOL_ADD_NODE, TOOL_MOVE } from "./editor/tools/tools.ts";
-import { useAppStore } from "./App.store.ts";
-import SquareSvg from "./assets/square.svg?react";
-import HandSvg from "./assets/hand.svg?react";
-import ButtonSquare from "./ButtonSquare.tsx";
+import { TOOL_ADD_NODE, TOOL_MOVE } from "../../tools/tools.ts";
+import { useAppStore } from "../../../App.store.ts";
+import SquareSvg from "../../../assets/square.svg?react";
+import HandSvg from "../../../assets/hand.svg?react";
+import ButtonSquare from "../ButtonSquare/ButtonSquare.tsx";
 
 function Toolbar() {
   const setTool = useAppStore((state) => state.setTool);

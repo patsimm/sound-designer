@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import "./Indicator.scss";
-import { useAppStore } from "./App.store.ts";
+import { useAppStore } from "../../../App.store.ts";
 
-export function Indicator() {
+function Indicator() {
   const pos = useAppStore((state) => state.indicatorPos);
   return (
     <div className={classNames("time-indicator__container")}>
@@ -13,3 +13,5 @@ export function Indicator() {
     </div>
   );
 }
+
+export default Indicator;

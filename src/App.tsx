@@ -1,8 +1,8 @@
 import "./App.scss";
 import Editor from "./editor/Editor.tsx";
-import Toolbar from "./Toolbar.tsx";
-import ContextBar from "./ContextBar.tsx";
-import Playbar from "./Playbar.tsx";
+import Toolbar from "./editor/components/Toolbar";
+import ContextBar from "./editor/components/ContextBar";
+import Playbar from "./editor/components/Playbar";
 import { useCallback, useState } from "react";
 import Player from "./synth/Player.ts";
 import classNames from "classnames";
