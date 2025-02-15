@@ -4,10 +4,13 @@ $icon-size: 1.5rem;
 
 .context-bar {
   position: absolute;
-  transform: translateX(-50%) translateY(calc(-100% - var(--spacing-s)));
   display: flex;
   column-gap: var(--spacing-s);
   padding: var(--spacing-s);
+  background-color: transparent;
+  color: var(--color-foreground);
+  transform: translateX(-50%) translateY(calc(-100% - var(--spacing-m)));
+  border-radius: var(--spacing-m);
 
   @include common.bg-area {
     border-radius: var(--spacing-m);
@@ -15,12 +18,13 @@ $icon-size: 1.5rem;
 
   & hr {
     border: none;
-    border-right: 2px solid var(--color-grayscale-700);
+    border-right: 1px solid var(--color-grayscale-500);
     margin: 0;
   }
 
   &__button {
-    background-color: unset;
+    position: relative;
+    background-color: transparent;
     border: none;
     cursor: pointer;
     padding: var(--spacing-s);
@@ -31,7 +35,7 @@ $icon-size: 1.5rem;
     border-radius: var(--spacing-sm);
 
     &:hover:not(&--expanded) {
-      background-color: var(--color-grayscale-500);
+        background-color: rgba(from var(--color-foreground) r g b / 5%);
     }
 
     &--dropdown {

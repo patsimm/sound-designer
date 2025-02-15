@@ -21,12 +21,7 @@
   }
 
   &:hover:not(&--selected) {
-    position: relative;
-    @include common.pseudo-background {
-      backdrop-filter: blur(5rem);
-      background-color: rgba(from white r g b / 4%);
-      border-radius: var(--spacing-m);
-    }
+    background-color: rgba(from var(--color-foreground) r g b / 5%);
   }
 
   &__icon {

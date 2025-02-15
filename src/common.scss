@@ -19,8 +19,8 @@
 
 @mixin bg-area {
   @include pseudo-background {
-    backdrop-filter: blur(5rem);
-    background-color: rgba(from var(--color-area) r g b / 50%);
+    backdrop-filter: blur(30px);
+    background-color: rgba(from var(--color-area) r g b / 40%);
     @content
   }
 }

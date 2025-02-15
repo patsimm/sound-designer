@@ -36,9 +36,17 @@ function ContextBarButton({
       aria-haspopup={ariaHaspopup}
       aria-controls={ariaControls}
     >
-      <span className={classNames("context-bar__icon-wrapper")}>{icon}</span>
+      <span
+        aria-hidden={true}
+        className={classNames("context-bar__icon-wrapper")}
+      >
+        {icon}
+      </span>
       {dropdown && (
-        <span className={classNames("context-bar__dropdown-icon")}>
+        <span
+          aria-hidden={true}
+          className={classNames("context-bar__dropdown-icon")}
+        >
           <ArrowDownSvg />
         </span>
       )}
