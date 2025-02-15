@@ -42,7 +42,6 @@ export class SoundNode {
 
   private createOscillator() {
     const oscillator = this.context.createOscillator();
-    oscillator.type = "sawtooth";
     oscillator.start(this.context.currentTime);
 
     oscillator.connect(this.gain);
@@ -102,6 +101,14 @@ export class SoundNode {
         this.oscillators = [...this.oscillators, this.createOscillator()];
       }
     }
+
+    this.oscillators.forEach((oscillator) => {
+      const periodicWave = this.context.createPeriodicWave(
+        this.#state.wavetable.real,
+        this.#state.wavetable.imag,
+      );
+      oscillator.setPeriodicWave(periodicWave);
+    });
 
     const currentBeatStart = beatStart(this.context.currentTime) + offset;
     const nextBeatStart = beatEnd(this.context.currentTime) + offset;

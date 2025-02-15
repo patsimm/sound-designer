@@ -1,3 +1,5 @@
+import { ColorJson } from "color";
+
 export const ENTITY_NODE = "node" as const;
 export const ENTITY_SELECTION_ANCHOR = "selection-anchor" as const;
 export const ENTITY_NODE_SKELETON = "node-skeleton";
@@ -29,7 +31,7 @@ export type Rect = {
   y: number;
   width: number;
   height: number;
-  color: string;
+  color: ColorJson;
 };
 
 export type EditorNode = Rect;

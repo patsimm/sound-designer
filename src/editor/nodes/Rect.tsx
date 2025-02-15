@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import Color, { ColorLike } from "color";
 import { createRef, useRef } from "react";
 
 import { useDrag, UseDragMoveCallback } from "../drag.hook.tsx";
@@ -20,7 +21,7 @@ export function Rect({
   y: number;
   width: number;
   height: number;
-  color: string;
+  color: ColorLike;
   selected: boolean;
   onDragMove: UseDragMoveCallback;
   grid: readonly [number, number];
@@ -63,7 +64,7 @@ export function Rect({
       height={height}
       x={x}
       y={y}
-      fill={color}
+      fill={Color(color).hex()}
       {...entityTypeProps(ENTITY_NODE)}
     ></rect>
   );

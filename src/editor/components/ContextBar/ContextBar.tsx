@@ -7,6 +7,7 @@ import EditSvg from "../../../assets/edit.svg?react";
 import ColorChooser from "../ColorChooser";
 import ContextBarButton from "./ContextBarButton.tsx";
 import ContextBarSubMenu from "./ContextBarSubMenu.tsx";
+import Color from "color";
 
 function ContextBar() {
   const selectedNode = useAppStore((state) =>
@@ -40,7 +41,7 @@ function ContextBar() {
             <span
               className={classNames("context-bar__color-circle")}
               style={{
-                background: selectedNode.color,
+                background: Color(selectedNode.color).hex(),
               }}
             />
           }
@@ -48,9 +49,9 @@ function ContextBar() {
         >
           <ColorChooser
             colors={[
-              "var(--color-primary-100)",
-              "var(--color-secondary-100)",
-              "var(--color-tertiary-100)",
+              "hsla(224, 88%, 55%, 1)",
+              "hsla(330, 90%, 62%, 1)",
+              "hsla(40, 90%, 62%, 1)",
             ]}
             onColorChosen={(color) => {
               changeColor(selectedNode.id, color);

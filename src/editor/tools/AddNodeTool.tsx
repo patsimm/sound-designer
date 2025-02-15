@@ -89,13 +89,7 @@ function AddNodeTool({ onAdded, editorRef }: AddNodeToolProps) {
 
   const handleDragEnd: UseDragEndCallback = useCallback(() => {
     if (rect == null) return;
-    const added = addRect(
-      rect.x,
-      rect.y,
-      rect.width,
-      rect.height,
-      "var(--color-primary-100)",
-    );
+    const added = addRect(rect.x, rect.y, rect.width, rect.height);
     setAnchor(null);
     if (added === undefined) return;
     onAdded(added);
@@ -103,13 +97,7 @@ function AddNodeTool({ onAdded, editorRef }: AddNodeToolProps) {
 
   const handleClick = useCallback(() => {
     if (pointerRectX === null || pointerRectY === null) return;
-    const added = addRect(
-      pointerRectX,
-      pointerRectY,
-      grid[0],
-      grid[1],
-      "var(--color-primary-100)",
-    );
+    const added = addRect(pointerRectX, pointerRectY, grid[0], grid[1]);
     if (added === undefined) return;
     onAdded(added);
   }, [addRect, grid, onAdded, pointerRectX, pointerRectY]);

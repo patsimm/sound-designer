@@ -3,12 +3,17 @@ import { EditorNode } from "../editor/entities.ts";
 import { mapObjectValues } from "../helpers.ts";
 import { posToTime } from "./bpm.ts";
 import { posToChordNotes, posToNote } from "./note.ts";
+import { colorToWavetable } from "./wavetable.ts";
 
 export type SoundNodeState = {
   time: number;
   length: number;
   note: string;
   chordNotes: number;
+  wavetable: {
+    real: number[];
+    imag: number[];
+  };
 };
 
 function computeSoundNodeState(node: EditorNode): SoundNodeState {
@@ -17,6 +22,7 @@ function computeSoundNodeState(node: EditorNode): SoundNodeState {
     note: posToNote(node.y + node.height),
     length: posToTime(node.width),
     chordNotes: posToChordNotes(node.height),
+    wavetable: colorToWavetable(node.color),
   };
 }
 

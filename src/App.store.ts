@@ -1,3 +1,4 @@
+import Color, { ColorLike } from "color";
 import { v7 as uuid } from "uuid";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
@@ -20,7 +21,7 @@ export type State = {
 type Actions = {
   move: (nodeId: string, movementX: number, movementY: number) => void;
   resize: (nodeId: string, x: number, y: number) => void;
-  changeColor: (nodeId: string, color: string) => void;
+  changeColor: (nodeId: string, color: ColorLike) => void;
   setEditorSize: (width: number, height: number) => void;
   setIndicatorPos: (pos: number) => void;
   setSelectedNodeId: (nodeId: string | null) => void;
@@ -30,7 +31,7 @@ type Actions = {
     y: number,
     width: number,
     height: number,
-    color: string,
+    color?: ColorLike,
   ) => string | undefined;
   removeNode: (nodeId: string) => void;
 };
@@ -46,6 +47,8 @@ const prepareScale =
     return lerp(minAfter, maxAfter, val);
   };
 
+const defaultColor = Color("#275DF1").toJSON();
+
 export const useAppStore = create<State & Actions>()(
   immer((set) => ({
     bpm: 160,
@@ -58,11 +61,11 @@ export const useAppStore = create<State & Actions>()(
         y: 12,
         width: 4,
         height: 1,
-        color: "var(--color-secondary-100)",
+        color: Color("hsla(330, 90%, 62%, 1)").toJSON(),
       },
-      "2": { id: "2", x: 8, y: 6, width: 4, height: 1, color: "#275DF1" },
-      "3": { id: "3", x: 16, y: 10, width: 4, height: 3, color: "#275DF1" },
-      "4": { id: "4", x: 24, y: 18, width: 4, height: 1, color: "#275DF1" },
+      "2": { id: "2", x: 8, y: 6, width: 4, height: 1, color: defaultColor },
+      "3": { id: "3", x: 16, y: 10, width: 4, height: 3, color: defaultColor },
+      "4": { id: "4", x: 24, y: 18, width: 4, height: 1, color: defaultColor },
     },
     indicatorPos: 0,
     selectedNodeId: null,
@@ -77,9 +80,9 @@ export const useAppStore = create<State & Actions>()(
         state.nodes[nodeId].width += x;
         state.nodes[nodeId].height += y;
       }),
-    changeColor: (nodeId: string, color: string) =>
+    changeColor: (nodeId: string, color: ColorLike) =>
       set((state: State) => {
-        state.nodes[nodeId].color = color;
+        state.nodes[nodeId].color = Color(color).toJSON();
       }),
     setEditorSize: (width: number, height: number) =>
       set((state: State) => {
@@ -114,7 +117,7 @@ export const useAppStore = create<State & Actions>()(
       y: number,
       width: number,
       height: number,
-      color: string,
+      color?: ColorLike,
     ) => {
       let newId: string | undefined;
       set((state: State) => {
@@ -127,7 +130,14 @@ export const useAppStore = create<State & Actions>()(
         newId = uuid();
         state.nodes = {
           ...state.nodes,
-          [newId]: { id: newId, x, y, width, height, color },
+          [newId]: {
+            id: newId,
+            x,
+            y,
+            width,
+            height,
+            color: color ? Color(color).toJSON() : defaultColor,
+          },
         };
       });
       return newId;
