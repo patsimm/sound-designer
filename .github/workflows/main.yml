@@ -2,7 +2,6 @@ name: Main Workflow
 
 on:
   push:
-    branches: [test-workflow]
 
 jobs:
   build:
