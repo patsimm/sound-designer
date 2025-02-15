@@ -19,7 +19,7 @@ export type UseDragMiddleware = (
 ) => [number, number];
 
 export type UseDragProps = {
-  setNodeRef: RefObject<Element & GlobalEventHandlers>;
+  setNodeRef: RefObject<(Element & GlobalEventHandlers) | null>;
   onDragMove: UseDragMoveCallback;
   onDragStart?: UseDragStartCallback;
   onDragEnd?: UseDragEndCallback;

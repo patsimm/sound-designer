@@ -15,7 +15,7 @@ import {
 } from "./drag.hook.tsx";
 
 export type DragContextProviderProps = {
-  target: RefObject<HTMLDivElement>;
+  target: RefObject<HTMLDivElement | null>;
 };
 
 export function DragContextProvider({

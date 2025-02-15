@@ -13,7 +13,7 @@ import { usePointerPos } from "../pointer.hook.tsx";
 
 type AddNodeToolProps = {
   onAdded: (nodeId: string) => void;
-  editorRef: RefObject<HTMLElement>;
+  editorRef: RefObject<HTMLElement | null>;
 };
 
 function AddNodeTool({ onAdded, editorRef }: AddNodeToolProps) {
