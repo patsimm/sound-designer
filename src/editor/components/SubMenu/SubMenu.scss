@@ -1,0 +1,23 @@
+@use "../../../common.scss";
+
+.sub-menu {
+  position: absolute;
+  display: none;
+  left: 50%;
+  top: calc(var(--spacing-m) * -1);
+  transform: translateY(-100%) translateX(-50%);
+  padding: var(--spacing-m);
+  color: var(--color-foreground);
+
+  &__button-wrapper {
+    position: relative;
+  }
+
+  &--visible {
+    display: block;
+  }
+
+  @include common.bg-area {
+    border-radius: var(--spacing-m);
+  }
+}

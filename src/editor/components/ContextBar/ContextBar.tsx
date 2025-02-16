@@ -1,13 +1,13 @@
 import "./ContextBar.scss";
 
 import classNames from "classnames";
+import Color from "color";
 
 import { useAppStore } from "../../../App.store.ts";
 import EditSvg from "../../../assets/edit.svg?react";
+import ButtonSquare from "../ButtonSquare";
 import ColorChooser from "../ColorChooser";
-import ContextBarButton from "./ContextBarButton.tsx";
-import ContextBarSubMenu from "./ContextBarSubMenu.tsx";
-import Color from "color";
+import SubMenu from "../SubMenu/SubMenu.tsx";
 
 function ContextBar() {
   const selectedNode = useAppStore((state) =>
@@ -26,7 +26,8 @@ function ContextBar() {
           top: selectedNode.y,
         }}
       >
-        <ContextBarButton
+        <ButtonSquare
+          size="small"
           onClick={() => {
             const nodeId = selectedNode.id;
             setSelectedNodeId(null);
@@ -36,16 +37,23 @@ function ContextBar() {
           label={"Remove"}
         />
         <hr />
-        <ContextBarSubMenu
-          icon={
-            <span
-              className={classNames("context-bar__color-circle")}
-              style={{
-                background: Color(selectedNode.color).hex(),
-              }}
+        <SubMenu
+          ButtonComponent={({ ...props }) => (
+            <ButtonSquare
+              size="small"
+              icon={
+                <span
+                  className={classNames("context-bar__color-circle")}
+                  style={{
+                    background: Color(selectedNode.color).hex(),
+                  }}
+                />
+              }
+              label="Choose color..."
+              dropdown
+              {...props}
             />
-          }
-          label={"Choose color..."}
+          )}
         >
           <ColorChooser
             colors={[
@@ -57,7 +65,7 @@ function ContextBar() {
               changeColor(selectedNode.id, color);
             }}
           />
-        </ContextBarSubMenu>
+        </SubMenu>
       </div>
     )
   );

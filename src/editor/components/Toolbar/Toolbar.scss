@@ -23,4 +23,20 @@
     justify-content: center;
     width: 100%;
   }
+
+  & > &__play-button--active, & > &__play-button:hover {
+    color: var(--color-tertiary-100);
+  }
+
+  & > &__stop-button--active, &__stop-button:hover {
+    color: var(--color-primary-100);
+  }
+
+  hr {
+    border: none;
+    border-right: 1px solid var(--color-grayscale-500);
+    margin: calc(var(--spacing-m) * -1) 0;
+    margin-right: var(--spacing-s);
+  }
+
 }

@@ -1,6 +1,7 @@
 @use "../../../common";
 
 $icon-size: 1.5rem;
+$border-radius: var(--spacing-sm);
 
 .context-bar {
   position: absolute;
@@ -22,38 +23,16 @@ $icon-size: 1.5rem;
     margin: 0;
   }
 
-  &__button {
-    position: relative;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: var(--spacing-s);
-    display: flex;
-    align-items: center;
-    flex: 0;
-    margin: 0;
-    border-radius: var(--spacing-sm);
-
-    &:hover:not(&--expanded) {
-        background-color: rgba(from var(--color-foreground) r g b / 5%);
-    }
-
-    &--dropdown {
-      padding-right: var(--spacing-xs);
-    }
-
-    &--expanded {
-      background-color: var(--color-primary-100);
-      @include common.glow-box(var(--color-primary-100), 0px, 1.5);
-
-      .context-bar__color-circle {
-        border: 1px solid var(--color-grayscale-200);
-      }
+  .button-square--active,  {
+    .context-bar__color-circle {
+      border: 1px solid var(--color-grayscale-200);
     }
   }
 
-  &__icon-wrapper {
+  &__icon {
     display: flex;
+    align-items: center;
+    justify-content: center;
     width: $icon-size;
     height: $icon-size;
     svg {
@@ -67,40 +46,5 @@ $icon-size: 1.5rem;
     width: $icon-size;
     height: $icon-size;
     border-radius: 100%;
-  }
-
-  &__dropdown-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-grayscale-200);
-    height: $icon-size;
-    width: $icon-size;
-    :first-child {
-      width: 1rem;
-      height: 1rem;
-    }
-  }
-
-  &__sub-menu-button-wrapper {
-    position: relative;
-  }
-
-  &__sub-menu {
-    position: absolute;
-    display: none;
-    left: -50%;
-    top: calc(var(--spacing-m) * -1);
-    transform: translateY(-100%);
-    padding: var(--spacing-m);
-    color: var(--color-foreground);
-
-    &--visible {
-      display: block;
-    }
-
-    @include common.bg-area {
-      border-radius: var(--spacing-m);
-    }
   }
 }
